@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="wynnChests:jar">
+    <output-path>$PROJECT_DIR$/out</output-path>
+    <root id="archive" name="wynnChests.jar">
+      <element id="module-output" name="wynnChests" />
+      <element id="extracted-dir" path="$KOTLIN_BUNDLED$/lib/kotlin-stdlib.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$KOTLIN_BUNDLED$/lib/kotlin-reflect.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$KOTLIN_BUNDLED$/lib/kotlin-test.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/json-20210307.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/JDA-4.2.0_240-withDependencies.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
