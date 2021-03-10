@@ -1,9 +1,7 @@
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class ParseThread extends Thread {
@@ -12,12 +10,13 @@ public class ParseThread extends Thread {
     public void run() {
         try {
             File file = new File("wc.log");
-            Scanner s = new Scanner(file);
+            BufferedReader br = new BufferedReader(new FileReader(file));
             StringBuilder wclog = new StringBuilder();
-            while (s.hasNextLine()) {
-                wclog.append(s.nextLine());
+            String line;
+            if ((line = br.readLine()) != null) {
+                wclog.append(line);
             }
-            s.close();
+            br.close();
             JSONObject json;
 
             json = new JSONObject(wclog.toString());
@@ -36,7 +35,7 @@ public class ParseThread extends Thread {
                 }
             }
 
-            FileWriter fw = new FileWriter("onlinePlayers.log", true);
+            FileWriter fw = new FileWriter("onlinePlayers.log");
             for (String player : onlinePlayers) {
                 fw.write(player + "\n");
             }

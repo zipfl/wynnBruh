@@ -21,11 +21,14 @@ public class Bot {
         jda.addEventListener(new CommandWc());
         jda.addEventListener(new CommandPrefix());
 
-        LogThread wcLogThread = new LogThread("https://api.wynncraft.com/public_api.php?action=onlinePlayers", 60);
+        LogThread wcLogThread = new LogThread("https://api.wynncraft.com/public_api.php?action=onlinePlayers", 60000, "wc.log", "wc");
         wcLogThread.start();
 
         ParseThread playerParseThread = new ParseThread();
         playerParseThread.start();
+
+        LogThread playerStatsLogThread = new LogThread("https://api.wynncraft.com/v2/player/%s/stats", 2500, "playerStats.log", "player");
+        playerStatsLogThread.start();
     }
 
     private String readAll(Reader rd) throws IOException {

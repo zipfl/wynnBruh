@@ -1,18 +1,20 @@
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class LogThread extends Thread {
     private final String apiEndpoint;
-    private final int refreshSeconds;
+    private final int refreshMillis;
+    private final String fileName;
+    private final String mode;
 
-    public LogThread(String apiEndpoint, int refreshSeconds) {
+    public LogThread(String apiEndpoint, int refreshMillis, String fileName, String mode) {
         this.apiEndpoint = apiEndpoint;
-        this.refreshSeconds = refreshSeconds * 1000;
+        this.refreshMillis = refreshMillis;
+        this.fileName = fileName;
+        this.mode = mode;
     }
 
     @Override
@@ -20,20 +22,34 @@ public class LogThread extends Thread {
         new Timer().scheduleAtFixedRate(new TimerTask() {
             public void run() {
                 try {
-                    JSONObject json = Main.bot.readJsonFromUrl(apiEndpoint);
-
-                    File file = new File("wc.log");
-                    FileWriter fw = new FileWriter("wc.log");
-                    fw.write(json.toString()+"\n");
-                    fw.close();
+                    JSONObject json;
+                    if (mode.equals("wc")) {
+                        json = Main.bot.readJsonFromUrl(apiEndpoint);
+                        new File(fileName);
+                        FileWriter fw = new FileWriter(fileName);
+                        fw.write(json.toString() + "\n");
+                        fw.close();
+                    } else {
+                        File file = new File("onlinePlayers.log");
+                        BufferedReader br = new BufferedReader(new FileReader(file));
+                        String line;
+                        if ((line = br.readLine()) != null) {
+                            json = Main.bot.readJsonFromUrl(String.format(apiEndpoint, line));
+                            new File(fileName);
+                            FileWriter fw = new FileWriter(fileName, true);
+                            fw.write(json.toString() + "\n");
+                            fw.close();
+                        }
+                        br.close();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
 
-        }, 0, refreshSeconds);
+        }, 0, refreshMillis);
         try {
-            Thread.sleep(refreshSeconds);
+            Thread.sleep(refreshMillis);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
