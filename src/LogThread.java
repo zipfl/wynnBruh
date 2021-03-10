@@ -9,6 +9,7 @@ public class LogThread extends Thread {
     private final int refreshMillis;
     private final String fileName;
     private final String mode;
+    private BufferedReader br;
 
     public LogThread(String apiEndpoint, int refreshMillis, String fileName, String mode) {
         this.apiEndpoint = apiEndpoint;
@@ -31,18 +32,20 @@ public class LogThread extends Thread {
                         fw.close();
                     } else {
                         File file = new File("onlinePlayers.log");
-                        BufferedReader br = new BufferedReader(new FileReader(file));
+                        br = new BufferedReader(new FileReader(file));
                         String line;
-                        if ((line = br.readLine()) != null) {
+                        while ((line = br.readLine()) != null) {
+                            removeFirstLine("onlinePlayers.log");
                             json = Main.bot.readJsonFromUrl(String.format(apiEndpoint, line));
                             new File(fileName);
                             FileWriter fw = new FileWriter(fileName, true);
-                            fw.write(json.toString() + "\n");
+                            fw.write(json.toString() + "ENDOFPLAYERSTATS\n");
                             fw.close();
+                            Thread.sleep(refreshMillis);
                         }
                         br.close();
                     }
-                } catch (IOException e) {
+                } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
             }
@@ -53,6 +56,27 @@ public class LogThread extends Thread {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void removeFirstLine(String fileName) throws IOException {
+        RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
+        //Initial write position
+        long writePosition = raf.getFilePointer();
+        raf.readLine();
+        // Shift the next lines upwards.
+        long readPosition = raf.getFilePointer();
+
+        byte[] buff = new byte[1024];
+        int n;
+        while (-1 != (n = raf.read(buff))) {
+            raf.seek(writePosition);
+            raf.write(buff, 0, n);
+            readPosition += n;
+            writePosition += n;
+            raf.seek(readPosition);
+        }
+        raf.setLength(writePosition);
+        raf.close();
     }
 }
 

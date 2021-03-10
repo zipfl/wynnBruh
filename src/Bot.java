@@ -22,13 +22,45 @@ public class Bot {
         jda.addEventListener(new CommandPrefix());
 
         LogThread wcLogThread = new LogThread("https://api.wynncraft.com/public_api.php?action=onlinePlayers", 60000, "wc.log", "wc");
-        wcLogThread.start();
+        new Timer().schedule(new TimerTask() {
 
-        ParseThread playerParseThread = new ParseThread();
-        playerParseThread.start();
+            @Override
+            public void run() {
+                wcLogThread.start();
+                System.out.println("wcLogThread");
+            }
+        }, 500);
+
+        ParseThread playerParseThread = new ParseThread("wc.log", "player");
+        new Timer().schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                playerParseThread.start();
+                System.out.println("playerParseThread");
+            }
+        }, 1000);
 
         LogThread playerStatsLogThread = new LogThread("https://api.wynncraft.com/v2/player/%s/stats", 2500, "playerStats.log", "player");
-        playerStatsLogThread.start();
+        new Timer().schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                playerStatsLogThread.start();
+                System.out.println("playerStatsLogThread");
+            }
+        }, 2000);
+
+
+        ParseThread chestsParseThread = new ParseThread("playerStats.log", "chests");
+        new Timer().schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                chestsParseThread.start();
+                System.out.println("chestsParseThread");
+            }
+        }, 3000);
 
         new Timer().schedule(new TimerTask() {
             public void run() {
