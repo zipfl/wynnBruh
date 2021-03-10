@@ -46,4 +46,12 @@ public class ParseThread extends Thread {
             e.printStackTrace();
         }
     }
+
+    public int getLogLineCount(String logFile) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(logFile));
+        int lines = 0;
+        while (reader.readLine() != null) lines++;
+        reader.close();
+        return lines;
+    }
 }

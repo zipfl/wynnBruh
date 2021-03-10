@@ -14,9 +14,9 @@ import java.util.regex.Pattern;
 
 public class Bot {
     public Settings settings = new Settings();
+
     public Bot(String token) throws LoginException {
         JDA jda = JDABuilder.createLight(token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES)
-                .setActivity(Activity.playing("children's block game"))
                 .build();
         jda.addEventListener(new CommandWc());
         jda.addEventListener(new CommandPrefix());
@@ -29,6 +29,16 @@ public class Bot {
 
         LogThread playerStatsLogThread = new LogThread("https://api.wynncraft.com/v2/player/%s/stats", 2500, "playerStats.log", "player");
         playerStatsLogThread.start();
+
+        new Timer().schedule(new TimerTask() {
+            public void run() {
+                try {
+                    jda.getPresence().setActivity(Activity.watching(playerParseThread.getLogLineCount("playerStats.log") + " player stats"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 0, 5000);
     }
 
     private String readAll(Reader rd) throws IOException {
