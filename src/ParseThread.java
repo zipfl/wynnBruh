@@ -1,9 +1,11 @@
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.*;
-import java.util.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 
 public class ParseThread extends Thread {
     private final String mode;
@@ -18,11 +20,9 @@ public class ParseThread extends Thread {
     public void run() {
         try {
             if (mode.equals("player")) {
-                StringBuilder wclog = readLog(filename);
+                StringBuilder wclog = Bot.readLog(filename);
                 JSONObject json;
-
                 json = new JSONObject(wclog.toString());
-
                 ArrayList<String> onlinePlayers = new ArrayList<>();
                 Iterator<String> keys = json.keys();
                 while (keys.hasNext()) {
@@ -36,20 +36,19 @@ public class ParseThread extends Thread {
                         }
                     }
                 }
-
                 FileWriter fw = new FileWriter("onlinePlayers.log");
                 for (String player : onlinePlayers) {
                     fw.write(player + "\n");
                 }
-
                 fw.close();
             } else if (mode.equals("chests")) {
-                StringBuilder chestLog = readLog(filename);
+                StringBuilder chestLog = Bot.readLog(filename);
                 JSONObject json;
 
                 String[] allPlayerStats = chestLog.toString().split("ENDOFPLAYERSTATS");
-                for (String allPlayerStat : allPlayerStats) {
-                    json = new JSONObject(allPlayerStat);
+                for (String playerStat : allPlayerStats) {
+                    Bot.removeFirstLine("playerStats.log");
+                    json = new JSONObject(playerStat);
 
                     Iterator<String> keys = json.keys();
                     while (keys.hasNext()) {
@@ -57,13 +56,15 @@ public class ParseThread extends Thread {
                         if (key.equals("data")) {
                             if (json.get(key) instanceof JSONArray) {
                                 String username = json.getJSONArray("data").getJSONObject(0).getString("username");
-                                int chests = json.getJSONArray("data").getJSONObject(0).getJSONObject("global").getInt("chestsFound");
                                 String server = null;
                                 if (json.getJSONArray("data").getJSONObject(0).getJSONObject("meta").getJSONObject("location").getBoolean("online")) {
                                     server = json.getJSONArray("data").getJSONObject(0).getJSONObject("meta").getJSONObject("location").getString("server");
                                 }
+                                int chests = json.getJSONArray("data").getJSONObject(0).getJSONObject("global").getInt("chestsFound");
+
                                 FileWriter fw = new FileWriter("chests.log", true);
-                                fw.write(username + "," + server + "," + chests + "," + new Date() + "\n");
+                                if (server != null)
+                                    fw.write(username + "," + server + "," + chests + "," + new Date() + "\n");
                                 fw.close();
                             }
                         }
@@ -71,29 +72,7 @@ public class ParseThread extends Thread {
                 }
             }
         } catch (IOException e) {
-            System.out.println(e.getLocalizedMessage());
             e.printStackTrace();
         }
-    }
-
-    @NotNull
-    private StringBuilder readLog(String filename) throws IOException {
-        File file = new File(filename);
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        StringBuilder string = new StringBuilder();
-        String line;
-        if ((line = br.readLine()) != null) {
-            string.append(line);
-        }
-        br.close();
-        return string;
-    }
-
-    public int getLogLineCount(String logFile) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(logFile));
-        int lines = 0;
-        while (reader.readLine() != null) lines++;
-        reader.close();
-        return lines;
     }
 }

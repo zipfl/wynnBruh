@@ -35,7 +35,7 @@ public class LogThread extends Thread {
                         br = new BufferedReader(new FileReader(file));
                         String line;
                         while ((line = br.readLine()) != null) {
-                            removeFirstLine("onlinePlayers.log");
+                            Bot.removeFirstLine("onlinePlayers.log");
                             json = Main.bot.readJsonFromUrl(String.format(apiEndpoint, line));
                             new File(fileName);
                             FileWriter fw = new FileWriter(fileName, true);
@@ -50,33 +50,8 @@ public class LogThread extends Thread {
                 }
             }
 
-        }, 0, refreshMillis);
-        try {
-            Thread.sleep(refreshMillis);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+        }, 0, 1000);
 
-    public static void removeFirstLine(String fileName) throws IOException {
-        RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
-        //Initial write position
-        long writePosition = raf.getFilePointer();
-        raf.readLine();
-        // Shift the next lines upwards.
-        long readPosition = raf.getFilePointer();
-
-        byte[] buff = new byte[1024];
-        int n;
-        while (-1 != (n = raf.read(buff))) {
-            raf.seek(writePosition);
-            raf.write(buff, 0, n);
-            readPosition += n;
-            writePosition += n;
-            raf.seek(readPosition);
-        }
-        raf.setLength(writePosition);
-        raf.close();
     }
 }
 

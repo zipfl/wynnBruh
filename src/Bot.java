@@ -2,6 +2,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,7 +28,7 @@ public class Bot {
             @Override
             public void run() {
                 wcLogThread.start();
-                System.out.println("wcLogThread");
+                System.out.println("wcLogThread started");
             }
         }, 500);
 
@@ -37,7 +38,7 @@ public class Bot {
             @Override
             public void run() {
                 playerParseThread.start();
-                System.out.println("playerParseThread");
+                System.out.println("playerParseThread started ");
             }
         }, 1000);
 
@@ -47,7 +48,7 @@ public class Bot {
             @Override
             public void run() {
                 playerStatsLogThread.start();
-                System.out.println("playerStatsLogThread");
+                System.out.println("playerStatsLogThread started");
             }
         }, 2000);
 
@@ -58,14 +59,14 @@ public class Bot {
             @Override
             public void run() {
                 chestsParseThread.start();
-                System.out.println("chestsParseThread");
+                System.out.println("chestsParseThread started");
             }
         }, 3000);
 
         new Timer().schedule(new TimerTask() {
             public void run() {
                 try {
-                    jda.getPresence().setActivity(Activity.watching(playerParseThread.getLogLineCount("playerStats.log") + " player stats"));
+                    jda.getPresence().setActivity(Activity.watching(getLogLineCount("playerStats.log") + " player stats"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -107,5 +108,47 @@ public class Bot {
             return false;
         }
         return pattern.matcher(strNum).matches();
+    }
+
+    public static void removeFirstLine(String fileName) throws IOException {
+        RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
+        //Initial write position
+        long writePosition = raf.getFilePointer();
+        raf.readLine();
+        // Shift the next lines upwards.
+        long readPosition = raf.getFilePointer();
+
+        byte[] buff = new byte[1024];
+        int n;
+        while (-1 != (n = raf.read(buff))) {
+            raf.seek(writePosition);
+            raf.write(buff, 0, n);
+            readPosition += n;
+            writePosition += n;
+            raf.seek(readPosition);
+        }
+        raf.setLength(writePosition);
+        raf.close();
+    }
+
+    @NotNull
+    public static StringBuilder readLog(String filename) throws IOException {
+        File file = new File(filename);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        StringBuilder string = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            string.append(line);
+        }
+        br.close();
+        return string;
+    }
+
+    public static int getLogLineCount(String logFile) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(logFile));
+        int lines = 0;
+        while (reader.readLine() != null) lines++;
+        reader.close();
+        return lines;
     }
 }
