@@ -62,7 +62,7 @@ public class Bot {
         new Timer().schedule(new TimerTask() {
             public void run() {
                 try {
-                    jda.getPresence().setActivity(Activity.watching(getLogLineCount("playerStats.log") + " player stats"));
+                    jda.getPresence().setActivity(Activity.watching(getLogLineCount("chests.log") + " chest stats"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
