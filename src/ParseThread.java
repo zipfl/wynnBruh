@@ -42,15 +42,20 @@ public class ParseThread extends Thread {
                 fw.close();
             } else if (mode.equals("chests")) {
                 StringBuilder chestLog = Bot.readLog(filename);
+                while (chestLog.length() == 0) {
+                    Thread.sleep(1000);
+                    chestLog = Bot.readLog(filename);
+                    if (chestLog.length() != 0) {
+                        break;
+                    }
+                }
                 JSONObject json;
                 long timestamp = 0;
                 String[] allPlayerStats = chestLog.toString().split("ENDOFPLAYERSTATS");
                 for (String playerStat : allPlayerStats) {
                     Bot.removeFirstLine("playerStats.log");
                     json = new JSONObject(playerStat);
-
                     Iterator<String> keys = json.keys();
-
                     while (keys.hasNext()) {
                         String key = keys.next();
                         if (key.equals("timestamp")) {
@@ -76,7 +81,7 @@ public class ParseThread extends Thread {
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }

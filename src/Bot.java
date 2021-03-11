@@ -36,9 +36,9 @@ public class Bot {
 
             @Override
             public void run() {
-                playerParseThread.start();
+                playerParseThread.run();
             }
-        }, 1000);
+        }, 1000, 60000);
 
         LogThread playerStatsLogThread = new LogThread("https://api.wynncraft.com/v2/player/%s/stats", 2500, "playerStats.log", "player");
         new Timer().schedule(new TimerTask() {
@@ -48,7 +48,6 @@ public class Bot {
                 playerStatsLogThread.start();
             }
         }, 2000);
-
 
         ParseThread chestsParseThread = new ParseThread("playerStats.log", "chests");
         new Timer().schedule(new TimerTask() {
