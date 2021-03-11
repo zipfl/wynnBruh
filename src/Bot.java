@@ -58,10 +58,10 @@ public class Bot {
 
             @Override
             public void run() {
-                chestsParseThread.start();
+                chestsParseThread.run();
                 System.out.println("chestsParseThread started");
             }
-        }, 3000);
+        }, 3000, 5000);
 
         new Timer().schedule(new TimerTask() {
             public void run() {
