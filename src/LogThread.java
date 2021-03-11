@@ -50,7 +50,7 @@ public class LogThread extends Thread {
                 }
             }
 
-        }, 0, 1000);
+        }, 0, refreshMillis);
 
     }
 }

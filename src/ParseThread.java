@@ -4,7 +4,6 @@ import org.json.JSONObject;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 
 public class ParseThread extends Thread {
@@ -44,15 +43,19 @@ public class ParseThread extends Thread {
             } else if (mode.equals("chests")) {
                 StringBuilder chestLog = Bot.readLog(filename);
                 JSONObject json;
-
+                long timestamp = 0;
                 String[] allPlayerStats = chestLog.toString().split("ENDOFPLAYERSTATS");
                 for (String playerStat : allPlayerStats) {
                     Bot.removeFirstLine("playerStats.log");
                     json = new JSONObject(playerStat);
 
                     Iterator<String> keys = json.keys();
+
                     while (keys.hasNext()) {
                         String key = keys.next();
+                        if (key.equals("timestamp")) {
+                            timestamp = json.getLong("timestamp");
+                        }
                         if (key.equals("data")) {
                             if (json.get(key) instanceof JSONArray) {
                                 String username = json.getJSONArray("data").getJSONObject(0).getString("username");
@@ -63,8 +66,10 @@ public class ParseThread extends Thread {
                                 int chests = json.getJSONArray("data").getJSONObject(0).getJSONObject("global").getInt("chestsFound");
 
                                 FileWriter fw = new FileWriter("chests.log", true);
-                                if (server != null)
-                                    fw.write(username + "," + server + "," + chests + "," + new Date() + "\n");
+                                if (server != null && !server.equals("null") && timestamp != 0) {
+                                    fw.write(username + "," + server + "," + chests + "," + timestamp + "\n");
+                                    System.out.println(username + "," + server + "," + chests + "," + timestamp + "\n");
+                                }
                                 fw.close();
                             }
                         }

@@ -28,7 +28,6 @@ public class Bot {
             @Override
             public void run() {
                 wcLogThread.start();
-                System.out.println("wcLogThread started");
             }
         }, 500);
 
@@ -38,7 +37,6 @@ public class Bot {
             @Override
             public void run() {
                 playerParseThread.start();
-                System.out.println("playerParseThread started ");
             }
         }, 1000);
 
@@ -48,7 +46,6 @@ public class Bot {
             @Override
             public void run() {
                 playerStatsLogThread.start();
-                System.out.println("playerStatsLogThread started");
             }
         }, 2000);
 
@@ -58,10 +55,9 @@ public class Bot {
 
             @Override
             public void run() {
-                chestsParseThread.start();
-                System.out.println("chestsParseThread started");
+                chestsParseThread.run();
             }
-        }, 3000);
+        }, 3000, 5000);
 
         new Timer().schedule(new TimerTask() {
             public void run() {
