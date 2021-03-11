@@ -70,7 +70,7 @@ public class Bot {
                     e.printStackTrace();
                 }
             }
-        }, 0, 5000);
+        }, 3000, 5000);
     }
 
     private String readAll(Reader rd) throws IOException {

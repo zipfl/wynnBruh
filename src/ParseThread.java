@@ -1,3 +1,4 @@
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,14 +18,7 @@ public class ParseThread extends Thread {
     public void run() {
         try {
             if (mode.equals("player")) {
-                File file = new File(filename);
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                StringBuilder wclog = new StringBuilder();
-                String line;
-                if ((line = br.readLine()) != null) {
-                    wclog.append(line);
-                }
-                br.close();
+                StringBuilder wclog = readLog(filename);
                 JSONObject json;
 
                 json = new JSONObject(wclog.toString());
@@ -50,14 +44,7 @@ public class ParseThread extends Thread {
 
                 fw.close();
             } else if (mode.equals("chests")) {
-                File file = new File(filename);
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                StringBuilder chestLog = new StringBuilder();
-                String line;
-                while ((line = br.readLine()) != null) {
-                    chestLog.append(line);
-                }
-                br.close();
+                StringBuilder chestLog = readLog(filename);
                 JSONObject json;
 
                 String[] allPlayerStats = chestLog.toString().split("ENDOFPLAYERSTATS");
@@ -76,8 +63,7 @@ public class ParseThread extends Thread {
                                     server = json.getJSONArray("data").getJSONObject(0).getJSONObject("meta").getJSONObject("location").getString("server");
                                 }
                                 FileWriter fw = new FileWriter("chests.log", true);
-                                if (username != null && server != null)
-                                    fw.write(username + "," + server + "," + chests + "," + new Date() + "\n");
+                                fw.write(username + "," + server + "," + chests + "," + new Date() + "\n");
                                 fw.close();
                             }
                         }
@@ -88,6 +74,19 @@ public class ParseThread extends Thread {
             System.out.println(e.getLocalizedMessage());
             e.printStackTrace();
         }
+    }
+
+    @NotNull
+    private StringBuilder readLog(String filename) throws IOException {
+        File file = new File(filename);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        StringBuilder string = new StringBuilder();
+        String line;
+        if ((line = br.readLine()) != null) {
+            string.append(line);
+        }
+        br.close();
+        return string;
     }
 
     public int getLogLineCount(String logFile) throws IOException {
