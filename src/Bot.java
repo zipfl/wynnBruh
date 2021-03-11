@@ -38,7 +38,7 @@ public class Bot {
             public void run() {
                 playerParseThread.run();
             }
-        }, 1000, 60000);
+        }, 1000, 5000);
 
         LogThread playerStatsLogThread = new LogThread("https://api.wynncraft.com/v2/player/%s/stats", 2500, "playerStats.log", "player");
         new Timer().schedule(new TimerTask() {
@@ -69,7 +69,7 @@ public class Bot {
         }, 3000, 5000);
     }
 
-    private String readAll(Reader rd) throws IOException {
+    private static String readAll(Reader rd) throws IOException {
         StringBuilder sb = new StringBuilder();
         int cp;
         while ((cp = rd.read()) != -1) {
@@ -78,7 +78,7 @@ public class Bot {
         return sb.toString();
     }
 
-    public JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
+    public static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
         try (InputStream is = new URL(url).openStream()) {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             String jsonText = readAll(rd);
@@ -96,13 +96,13 @@ public class Bot {
         return temp;
     }
 
-    private final Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+    private static final Pattern patternNumber = Pattern.compile("-?\\d+(\\.\\d+)?");
 
-    public boolean isNumeric(String strNum) {
+    public static boolean isNumeric(String strNum) {
         if (strNum == null) {
             return false;
         }
-        return pattern.matcher(strNum).matches();
+        return patternNumber.matcher(strNum).matches();
     }
 
     public static void removeFirstLine(String fileName) throws IOException {

@@ -25,18 +25,18 @@ public class LogThread extends Thread {
                 try {
                     JSONObject json;
                     if (mode.equals("wc")) {
-                        json = Main.bot.readJsonFromUrl(apiEndpoint);
+                        json = Bot.readJsonFromUrl(apiEndpoint);
                         new File(fileName);
                         FileWriter fw = new FileWriter(fileName);
                         fw.write(json.toString() + "\n");
                         fw.close();
-                    } else {
+                    } else if (mode.equals("player")) {
                         File file = new File("onlinePlayers.log");
                         br = new BufferedReader(new FileReader(file));
                         String line;
                         while ((line = br.readLine()) != null) {
                             Bot.removeFirstLine("onlinePlayers.log");
-                            json = Main.bot.readJsonFromUrl(String.format(apiEndpoint, line));
+                            json = Bot.readJsonFromUrl(String.format(apiEndpoint, line));
                             new File(fileName);
                             FileWriter fw = new FileWriter(fileName, true);
                             fw.write(json.toString() + "ENDOFPLAYERSTATS\n");

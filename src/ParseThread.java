@@ -19,27 +19,30 @@ public class ParseThread extends Thread {
     public void run() {
         try {
             if (mode.equals("player")) {
-                StringBuilder wclog = Bot.readLog(filename);
-                JSONObject json;
-                json = new JSONObject(wclog.toString());
-                ArrayList<String> onlinePlayers = new ArrayList<>();
-                Iterator<String> keys = json.keys();
-                while (keys.hasNext()) {
-                    String key = keys.next();
-                    if (key.equals("request"))
-                        continue;
+                if (Bot.getLogLineCount("onlinePlayers.log") == 0) {
+                    StringBuilder wclog = Bot.readLog(filename);
+                    JSONObject json;
+                    json = new JSONObject(wclog.toString());
+                    ArrayList<String> onlinePlayers = new ArrayList<>();
+                    Iterator<String> keys = json.keys();
+                    while (keys.hasNext()) {
+                        String key = keys.next();
+                        if (key.equals("request"))
+                            continue;
 
-                    if (json.get(key) instanceof JSONArray) {
-                        for (int i = 0; i < ((JSONArray) json.get(key)).length(); i++) {
-                            onlinePlayers.add(((JSONArray) json.get(key)).getString(i));
+                        if (json.get(key) instanceof JSONArray) {
+                            for (int i = 0; i < ((JSONArray) json.get(key)).length(); i++) {
+                                onlinePlayers.add(((JSONArray) json.get(key)).getString(i));
+                            }
                         }
                     }
+
+                    FileWriter fw = new FileWriter("onlinePlayers.log");
+                    for (String player : onlinePlayers) {
+                        fw.write(player + "\n");
+                    }
+                    fw.close();
                 }
-                FileWriter fw = new FileWriter("onlinePlayers.log");
-                for (String player : onlinePlayers) {
-                    fw.write(player + "\n");
-                }
-                fw.close();
             } else if (mode.equals("chests")) {
                 StringBuilder chestLog = Bot.readLog(filename);
                 while (chestLog.length() == 0) {
