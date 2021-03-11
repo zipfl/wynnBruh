@@ -1,8 +1,9 @@
 import org.json.JSONObject;
 
 import java.io.*;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class LogThread extends Thread {
     private final String apiEndpoint;
@@ -10,6 +11,7 @@ public class LogThread extends Thread {
     private final String fileName;
     private final String mode;
     private BufferedReader br;
+    String player;
 
     public LogThread(String apiEndpoint, int refreshMillis, String fileName, String mode) {
         this.apiEndpoint = apiEndpoint;
@@ -33,15 +35,24 @@ public class LogThread extends Thread {
                     } else if (mode.equals("player")) {
                         File file = new File("onlinePlayers.log");
                         br = new BufferedReader(new FileReader(file));
-                        String line;
-                        while ((line = br.readLine()) != null) {
+                        while ((player = br.readLine()) != null) {
+                            String[] blacklistArr = Bot.readLog("blacklist.log").toString().split("\n");
+                            HashMap<String, Long> blacklist = new HashMap<>();
+                            for (String s: blacklistArr) {
+                                if (!s.equals(""))
+                                    blacklist.put(s.split(",")[0],Long.parseLong(s.split(",")[1]));
+                            }
                             Bot.removeFirstLine("onlinePlayers.log");
-                            json = Bot.readJsonFromUrl(String.format(apiEndpoint, line));
-                            new File(fileName);
-                            FileWriter fw = new FileWriter(fileName, true);
-                            fw.write(json.toString() + "ENDOFPLAYERSTATS\n");
-                            fw.close();
-                            Thread.sleep(refreshMillis);
+                            if(!blacklist.containsKey(player) || System.currentTimeMillis() - blacklist.get(player) > 604800000) {
+                                json = Bot.readJsonFromUrl(String.format(apiEndpoint, player));
+                                new File(fileName);
+                                FileWriter fw = new FileWriter(fileName, true);
+                                fw.write(json.toString() + "\n");
+                                fw.close();
+                                Thread.sleep(refreshMillis);
+                            } else {
+                                System.out.println(player + " is blacklisted.." + TimeUnit.MILLISECONDS.toHours(Math.abs(System.currentTimeMillis() - blacklist.get(player) - 604800000)) + "hours remaining..skipping");
+                            }
                         }
                         br.close();
                     }
@@ -49,9 +60,7 @@ public class LogThread extends Thread {
                     e.printStackTrace();
                 }
             }
-
         }, 0, refreshMillis);
-
     }
 }
 

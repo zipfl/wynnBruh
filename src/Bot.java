@@ -22,14 +22,14 @@ public class Bot {
         jda.addEventListener(new CommandWc());
         jda.addEventListener(new CommandPrefix());
 
-        LogThread wcLogThread = new LogThread("https://api.wynncraft.com/public_api.php?action=onlinePlayers", 60000, "wc.log", "wc");
+        LogThread wcLogThread = new LogThread("https://api.wynncraft.com/public_api.php?action=onlinePlayers", 30000, "wc.log", "wc");
         new Timer().schedule(new TimerTask() {
 
             @Override
             public void run() {
                 wcLogThread.start();
             }
-        }, 500);
+        }, 1000);
 
         ParseThread playerParseThread = new ParseThread("wc.log", "player");
         new Timer().schedule(new TimerTask() {
@@ -38,16 +38,16 @@ public class Bot {
             public void run() {
                 playerParseThread.run();
             }
-        }, 1000, 5000);
+        }, 2000, 5000);
 
-        LogThread playerStatsLogThread = new LogThread("https://api.wynncraft.com/v2/player/%s/stats", 2500, "playerStats.log", "player");
+        LogThread playerStatsLogThread = new LogThread("https://api.wynncraft.com/v2/player/%s/stats", 2400, "playerStats.log", "player");
         new Timer().schedule(new TimerTask() {
 
             @Override
             public void run() {
                 playerStatsLogThread.start();
             }
-        }, 2000);
+        }, 3000);
 
         ParseThread chestsParseThread = new ParseThread("playerStats.log", "chests");
         new Timer().schedule(new TimerTask() {
@@ -56,7 +56,7 @@ public class Bot {
             public void run() {
                 chestsParseThread.run();
             }
-        }, 3000, 5000);
+        }, 4000, 2500);
 
         new Timer().schedule(new TimerTask() {
             public void run() {
@@ -129,17 +129,20 @@ public class Bot {
     @NotNull
     public static StringBuilder readLog(String filename) throws IOException {
         File file = new File(filename);
+        file.createNewFile();
         BufferedReader br = new BufferedReader(new FileReader(file));
         StringBuilder string = new StringBuilder();
         String line;
         while ((line = br.readLine()) != null) {
-            string.append(line);
+            string.append(line).append("\n");
         }
         br.close();
         return string;
     }
 
     public static int getLogLineCount(String logFile) throws IOException {
+        File file = new File(logFile);
+        file.createNewFile();
         BufferedReader reader = new BufferedReader(new FileReader(logFile));
         int lines = 0;
         while (reader.readLine() != null) lines++;

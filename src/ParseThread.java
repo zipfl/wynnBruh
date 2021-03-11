@@ -4,6 +4,7 @@ import org.json.JSONObject;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class ParseThread extends Thread {
@@ -53,17 +54,15 @@ public class ParseThread extends Thread {
                     }
                 }
                 JSONObject json;
-                long timestamp = 0;
-                String[] allPlayerStats = chestLog.toString().split("ENDOFPLAYERSTATS");
+                long timestamp;
+                String[] allPlayerStats = chestLog.toString().split("\n");
                 for (String playerStat : allPlayerStats) {
                     Bot.removeFirstLine("playerStats.log");
                     json = new JSONObject(playerStat);
                     Iterator<String> keys = json.keys();
                     while (keys.hasNext()) {
                         String key = keys.next();
-                        if (key.equals("timestamp")) {
-                            timestamp = json.getLong("timestamp");
-                        }
+                        timestamp = json.getLong("timestamp");
                         if (key.equals("data")) {
                             if (json.get(key) instanceof JSONArray) {
                                 String username = json.getJSONArray("data").getJSONObject(0).getString("username");
@@ -71,14 +70,31 @@ public class ParseThread extends Thread {
                                 if (json.getJSONArray("data").getJSONObject(0).getJSONObject("meta").getJSONObject("location").getBoolean("online")) {
                                     server = json.getJSONArray("data").getJSONObject(0).getJSONObject("meta").getJSONObject("location").getString("server");
                                 }
-                                int chests = json.getJSONArray("data").getJSONObject(0).getJSONObject("global").getInt("chestsFound");
 
-                                FileWriter fw = new FileWriter("chests.log", true);
-                                if (server != null && !server.equals("null") && timestamp != 0) {
-                                    fw.write(username + "," + server + "," + chests + "," + timestamp + "\n");
-                                    System.out.println(username + "," + server + "," + chests + "," + timestamp + "\n");
+                                int chests = json.getJSONArray("data").getJSONObject(0).getJSONObject("global").getInt("chestsFound");
+                                if (chests < 1500) {
+                                    String[] blacklistArr = Bot.readLog("blacklist.log").toString().split("\n");
+                                    ArrayList<String> blacklist = new ArrayList<>(Arrays.asList(blacklistArr));
+                                    if (!blacklist.contains(username)) {
+                                        blacklist.add(username + "," + System.currentTimeMillis() + "\n");
+                                        System.out.println(username + " added to blacklist");
+                                    }
+
+                                    FileWriter fw = new FileWriter("blacklist.log");
+                                    for (String entry : blacklist) {
+                                        fw.write(entry + "\n");
+                                    }
+                                    fw.close();
+                                } else {
+                                    FileWriter fw = new FileWriter("chests.log", true);
+                                    if (server != null && !server.equals("null")) {
+                                        fw.write(username + "," + server + "," + chests + "," + timestamp + "\n");
+                                        System.out.println(username + "," + server + "," + chests + "," + timestamp);
+                                    } else {
+                                        System.out.println(username + " is already offline.. skipping");
+                                    }
+                                    fw.close();
                                 }
-                                fw.close();
                             }
                         }
                     }
