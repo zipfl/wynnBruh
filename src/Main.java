@@ -6,7 +6,7 @@ import java.io.IOException;
 public class Main extends ListenerAdapter {
     public static Bot bot;
 
-    public static void main(String[] args) throws LoginException {
+    public static void main(String[] args) throws LoginException, IOException {
         if (args.length < 1) {
             System.out.println("You have to provide a token as first argument!");
             System.exit(1);
