@@ -129,6 +129,7 @@ public class Bot {
     @NotNull
     public static StringBuilder readLog(String filename) throws IOException {
         File file = new File(filename);
+        //noinspection ResultOfMethodCallIgnored
         file.createNewFile();
         BufferedReader br = new BufferedReader(new FileReader(file));
         StringBuilder string = new StringBuilder();
@@ -142,6 +143,7 @@ public class Bot {
 
     public static int getLogLineCount(String logFile) throws IOException {
         File file = new File(logFile);
+        //noinspection ResultOfMethodCallIgnored
         file.createNewFile();
         BufferedReader reader = new BufferedReader(new FileReader(logFile));
         int lines = 0;
