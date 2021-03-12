@@ -17,13 +17,7 @@ public class UptimeThread extends Thread {
     @Override
     public void run() {
         try {
-            String[] uptimeArr = Bot.readLog("uptime.log").toString().split("\n");
-            if (!uptimeArr[0].equals("")) {
-                for (String uptimeEntry : uptimeArr) {
-                    boolean aBoolean = Boolean.parseBoolean(uptimeEntry.split(",")[1]);
-                    uptimeMap.put(uptimeEntry.split(",")[0], new ServerStatus(aBoolean, Long.parseLong(uptimeEntry.split(",")[2])));
-                }
-            }
+            getUptimeMap(uptimeMap);
             String wcLog = Bot.readLog("wc.log").toString();
             for (int i = 1; i < 80; i++) {
                 if (wcLog.contains("WC" + i)) {
@@ -43,6 +37,16 @@ public class UptimeThread extends Thread {
             bf.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void getUptimeMap(HashMap<String, ServerStatus> uptimeMap) throws IOException {
+        String[] uptimeArr = Bot.readLog("uptime.log").toString().split("\n");
+        if (!uptimeArr[0].equals("")) {
+            for (String uptimeEntry : uptimeArr) {
+                boolean aBoolean = Boolean.parseBoolean(uptimeEntry.split(",")[1]);
+                uptimeMap.put(uptimeEntry.split(",")[0], new ServerStatus(aBoolean, Long.parseLong(uptimeEntry.split(",")[2])));
+            }
         }
     }
 }

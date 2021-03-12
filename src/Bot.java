@@ -20,6 +20,7 @@ public class Bot {
         JDA jda = JDABuilder.createLight(token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES)
                 .build();
         jda.addEventListener(new CommandWc());
+        jda.addEventListener(new CommandUptime());
         jda.addEventListener(new CommandPrefix());
 
         LogThread wcLogThread = new LogThread("https://api.wynncraft.com/public_api.php?action=onlinePlayers", "wc.log", "wc");
