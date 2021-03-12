@@ -4,9 +4,12 @@ import org.json.JSONObject;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
+@SuppressWarnings("BusyWait")
 public class ParseThread extends Thread {
     private final String mode;
     private final String filename;
@@ -75,8 +78,8 @@ public class ParseThread extends Thread {
                                 if (chests < 1500) {
                                     String[] blacklistArr = Bot.readLog("blacklist.log").toString().split("\n");
                                     HashMap<String, Long> blacklist = new HashMap<>();
-                                    for (String blacklistEntry : blacklistArr) {
-                                        if (blacklistEntry.contains(",")) {
+                                    if (!blacklistArr[0].equals("")) {
+                                        for (String blacklistEntry : blacklistArr) {
                                             blacklist.put(blacklistEntry.split(",")[0], Long.parseLong(blacklistEntry.split(",")[1]));
                                         }
                                     }

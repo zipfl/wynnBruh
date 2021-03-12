@@ -21,7 +21,7 @@ public class CommandWc extends ListenerAdapter {
 
             JSONObject json = null;
             try {
-                json = Main.bot.readJsonFromUrl("https://api.wynncraft.com/public_api.php?action=onlinePlayers");
+                json = Bot.readJsonFromUrl("https://api.wynncraft.com/public_api.php?action=onlinePlayers");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -35,7 +35,7 @@ public class CommandWc extends ListenerAdapter {
             StringBuilder message = new StringBuilder();
             Iterator<String> keys = json.keys();
 
-            if (Main.bot.isNumeric(cmd)) {
+            if (Bot.isNumeric(cmd)) {
                 while (keys.hasNext()) {
                     String key = keys.next();
                     if (key.equals("request"))

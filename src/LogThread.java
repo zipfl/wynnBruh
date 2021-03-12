@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("BusyWait")
 public class LogThread extends Thread {
     private final String apiEndpoint;
     private final int refreshMillis;

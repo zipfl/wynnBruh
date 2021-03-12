@@ -56,7 +56,7 @@ public class Bot {
             public void run() {
                 chestsParseThread.run();
             }
-        }, 4000, 2500);
+        }, 4000, 2400);
 
         new Timer().schedule(new TimerTask() {
             public void run() {
