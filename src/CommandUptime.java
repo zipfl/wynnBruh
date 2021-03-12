@@ -22,7 +22,6 @@ public class CommandUptime extends ListenerAdapter {
             if (msg.getContentRaw().trim().contains(" ")) {
                 server = msg.getContentRaw().trim().split(" ")[1];
             }
-
             try {
                 UptimeThread.getUptimeMap(uptimeMap);
                 for (Map.Entry<String, ServerStatus> entry : uptimeMap.entrySet()) {
@@ -30,13 +29,20 @@ public class CommandUptime extends ListenerAdapter {
                         onlineMap.put(entry.getKey(), entry.getValue().changed);
                     }
                 }
-                HashMap<String, Long> sortedOnlineMap = sortByValues(onlineMap);
-
-                int amount = 0;
-                for (Map.Entry<String, Long> entry : sortedOnlineMap.entrySet()) {
-                    message.append(entry.getKey()).append(": ").append(TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - entry.getValue())).append(" min \n");
-                    amount++;
-                    if (amount > 5) break;
+                if (server == null || Bot.isNumeric(server)) {
+                    HashMap<String, Long> sortedOnlineMap = sortByValues(onlineMap);
+                    int amount = Bot.isNumeric(server) ? Integer.parseInt(server): 5;
+                    int first = amount;
+                    for (Map.Entry<String, Long> entry : sortedOnlineMap.entrySet()) {
+                        if (amount == first)
+                            message.append(":star: ").append(entry.getKey()).append(": ").append(TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - entry.getValue())).append(" min\n");
+                        else
+                            message.append(":earth_americas: ").append(entry.getKey()).append(": ").append(TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - entry.getValue())).append(" min\n");
+                        amount--;
+                        if (amount == 0) break;
+                    }
+                } else {
+                    message.append(":earth_americas: ").append(server.toUpperCase(Locale.ROOT)).append(": ").append(TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - onlineMap.get(server.toUpperCase(Locale.ROOT)))).append(" min\n");
                 }
 
             } catch (IOException e) {
