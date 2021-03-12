@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static java.util.Collections.*;
-
 public class CommandUptime extends ListenerAdapter {
     private final HashMap<String, ServerStatus> uptimeMap = new HashMap<>();
     private final HashMap<String, Long> onlineMap = new HashMap<>();
@@ -55,8 +53,7 @@ public class CommandUptime extends ListenerAdapter {
 
     private static HashMap<String, Long> sortByValues(HashMap<String, Long> map) {
         List<Map.Entry<String, Long>> list = new LinkedList<>(map.entrySet());
-        list.sort((o1, o2) -> ((Comparable) ((Map.Entry) (o1)).getValue())
-                .compareTo(((Map.Entry) (o2)).getValue()));
+        list.sort((o1, o2) -> ((Comparable) o1.getValue()).compareTo(((o2)).getValue()));
         HashMap<String, Long> sortedHashMap = new LinkedHashMap<>();
         for (Map.Entry<String, Long> entry : list) sortedHashMap.put(entry.getKey(), entry.getValue());
         return sortedHashMap;
