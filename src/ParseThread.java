@@ -91,15 +91,19 @@ public class ParseThread extends Thread {
                                         bf.newLine();
                                     }
                                     bf.flush();
+                                    bf.close();
                                 } else {
-                                    FileWriter fw = new FileWriter("chests.log", true);
+                                    BufferedWriter bf;
                                     if (server != null && !server.equals("null")) {
-                                        fw.write(username + "," + server + "," + chests + "," + timestamp + "\n");
-                                        System.out.println(username + "," + server + "," + chests + "," + timestamp);
+                                        bf = new BufferedWriter(new FileWriter("chests_" + server + ".log", true));
+                                        bf.write(username + "," + chests + "," + timestamp);
+                                        System.out.println(server + ": " + username + "," + chests + "," + timestamp);
+                                        bf.newLine();
+                                        bf.flush();
+                                        bf.close();
                                     } else {
                                         System.out.println(username + " is already offline.. skipping");
                                     }
-                                    fw.close();
                                 }
                             }
                         }
