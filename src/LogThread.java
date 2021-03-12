@@ -1,8 +1,9 @@
 import org.json.JSONObject;
 
 import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 public class LogThread extends Thread {

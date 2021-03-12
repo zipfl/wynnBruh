@@ -1,11 +1,11 @@
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class ParseThread extends Thread {
     private final String mode;
@@ -74,17 +74,20 @@ public class ParseThread extends Thread {
                                 int chests = json.getJSONArray("data").getJSONObject(0).getJSONObject("global").getInt("chestsFound");
                                 if (chests < 1500) {
                                     String[] blacklistArr = Bot.readLog("blacklist.log").toString().split("\n");
-                                    ArrayList<String> blacklist = new ArrayList<>(Arrays.asList(blacklistArr));
-                                    if (!blacklist.contains(username)) {
-                                        blacklist.add(username + "," + System.currentTimeMillis() + "\n");
-                                        System.out.println(username + " added to blacklist");
+                                    HashMap<String, Long> blacklist = new HashMap<>();
+                                    for (String blacklistEntry : blacklistArr) {
+                                        if (blacklistEntry.contains(",")) {
+                                            blacklist.put(blacklistEntry.split(",")[0], Long.parseLong(blacklistEntry.split(",")[1]));
+                                        }
                                     }
-
-                                    FileWriter fw = new FileWriter("blacklist.log");
-                                    for (String entry : blacklist) {
-                                        fw.write(entry + "\n");
+                                    blacklist.put(username, System.currentTimeMillis());
+                                    System.out.println(username + " added to blacklist");
+                                    BufferedWriter bf = new BufferedWriter(new FileWriter("blacklist.log"));
+                                    for (Map.Entry<String, Long> entry : blacklist.entrySet()) {
+                                        bf.write(entry.getKey() + "," + entry.getValue());
+                                        bf.newLine();
                                     }
-                                    fw.close();
+                                    bf.flush();
                                 } else {
                                     FileWriter fw = new FileWriter("chests.log", true);
                                     if (server != null && !server.equals("null")) {
