@@ -137,7 +137,7 @@ public class Bot {
     }
 
     @NotNull
-    public static StringBuilder readLog(String filename) throws IOException {
+    public static String readLog(String filename) throws IOException {
         File file = new File(filename);
         //noinspection ResultOfMethodCallIgnored
         file.createNewFile();
@@ -148,7 +148,7 @@ public class Bot {
             string.append(line).append("\n");
         }
         br.close();
-        return string;
+        return string.toString();
     }
 
     public static int getLogLineCount(String logFile) throws IOException {

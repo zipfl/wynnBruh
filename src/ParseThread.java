@@ -1,3 +1,4 @@
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -24,9 +25,7 @@ public class ParseThread extends Thread {
         try {
             if (mode.equals("player")) {
                 if (Bot.getLogLineCount("onlinePlayers.log") == 0) {
-                    StringBuilder wclog = Bot.readLog(filename);
-                    JSONObject json;
-                    json = new JSONObject(wclog.toString());
+                    JSONObject json = new JSONObject(Bot.readLog(filename));
                     ArrayList<String> onlinePlayers = new ArrayList<>();
                     Iterator<String> keys = json.keys();
                     while (keys.hasNext()) {
@@ -48,7 +47,7 @@ public class ParseThread extends Thread {
                     fw.close();
                 }
             } else if (mode.equals("chests")) {
-                StringBuilder chestLog = Bot.readLog(filename);
+                String chestLog = Bot.readLog(filename);
                 while (chestLog.length() == 0) {
                     Thread.sleep(1000);
                     chestLog = Bot.readLog(filename);
@@ -58,7 +57,7 @@ public class ParseThread extends Thread {
                 }
                 JSONObject json;
                 long timestamp;
-                String[] allPlayerStats = chestLog.toString().split("\n");
+                String[] allPlayerStats = chestLog.split("\n");
                 for (String playerStat : allPlayerStats) {
                     Bot.removeFirstLine("playerStats.log");
                     json = new JSONObject(playerStat);
@@ -76,33 +75,17 @@ public class ParseThread extends Thread {
 
                                 int chests = json.getJSONArray("data").getJSONObject(0).getJSONObject("global").getInt("chestsFound");
                                 if (chests < 1500) {
-                                    String[] blacklistArr = Bot.readLog("blacklist.log").toString().split("\n");
-                                    HashMap<String, Long> blacklist = new HashMap<>();
-                                    if (!blacklistArr[0].equals("")) {
-                                        for (String blacklistEntry : blacklistArr) {
-                                            blacklist.put(blacklistEntry.split(",")[0], Long.parseLong(blacklistEntry.split(",")[1]));
-                                        }
-                                    }
-                                    blacklist.put(username, System.currentTimeMillis());
-                                    System.out.println(username + " added to blacklist");
-                                    BufferedWriter bf = new BufferedWriter(new FileWriter("blacklist.log"));
-                                    for (Map.Entry<String, Long> entry : blacklist.entrySet()) {
-                                        bf.write(entry.getKey() + "," + entry.getValue());
-                                        bf.newLine();
-                                    }
-                                    bf.flush();
-                                    bf.close();
+                                    addToBlacklist(username);
                                 } else {
-                                    BufferedWriter bf;
                                     if (server != null && !server.equals("null")) {
-                                        bf = new BufferedWriter(new FileWriter("chests_" + server + ".log", true));
+                                        BufferedWriter bf = new BufferedWriter(new FileWriter("chests_" + server + ".log", true));
                                         bf.write(username + "," + chests + "," + timestamp);
-                                        System.out.println(server + ": " + username + "," + chests + "," + timestamp);
+                                        System.out.println("[CST] " + server + ": " + username + "," + chests + "," + timestamp);
                                         bf.newLine();
                                         bf.flush();
                                         bf.close();
                                     } else {
-                                        System.out.println(username + " is already offline.. skipping");
+                                        System.out.println("[OFF] " + username + " is already offline..");
                                     }
                                 }
                             }
@@ -113,5 +96,24 @@ public class ParseThread extends Thread {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public static synchronized void addToBlacklist(String username) throws IOException {
+        String[] blacklistArr = Bot.readLog("blacklist.log").split("\n");
+        HashMap<String, Long> blacklist = new HashMap<>();
+        if (!blacklistArr[0].equals("")) {
+            for (String blacklistEntry : blacklistArr) {
+                blacklist.put(blacklistEntry.split(",")[0], Long.parseLong(blacklistEntry.split(",")[1]));
+            }
+        }
+        blacklist.put(username, System.currentTimeMillis());
+        System.out.println("[BLK] " + username + " added to blacklist");
+        BufferedWriter bf = new BufferedWriter(new FileWriter("blacklist.log"));
+        for (Map.Entry<String, Long> entry : blacklist.entrySet()) {
+            bf.write(entry.getKey() + "," + entry.getValue());
+            bf.newLine();
+        }
+        bf.flush();
+        bf.close();
     }
 }

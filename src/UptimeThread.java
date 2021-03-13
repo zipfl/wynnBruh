@@ -19,8 +19,8 @@ public class UptimeThread extends Thread {
     public void run() {
         try {
             getUptimeMap(uptimeMap);
-            String apiLog = Bot.readLog("wc.log").toString();
-            String[] uptimeLog = Bot.readLog("uptime.log").toString().split("\n");
+            String apiLog = Bot.readLog("wc.log");
+            String[] uptimeLog = Bot.readLog("uptime.log").split("\n");
             ArrayList<String> allServers = new ArrayList<>();
             for (String uptimeLogEntry : uptimeLog) {
                 allServers.add(uptimeLogEntry.split(",")[0]);
@@ -47,7 +47,7 @@ public class UptimeThread extends Thread {
     }
 
     public static void getUptimeMap(HashMap<String, ServerStatus> uptimeMap) throws IOException {
-        String[] uptimeArr = Bot.readLog("uptime.log").toString().split("\n");
+        String[] uptimeArr = Bot.readLog("uptime.log").split("\n");
         if (!uptimeArr[0].equals("")) {
             for (String uptimeEntry : uptimeArr) {
                 boolean aBoolean = Boolean.parseBoolean(uptimeEntry.split(",")[1]);

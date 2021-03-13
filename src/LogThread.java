@@ -31,7 +31,7 @@ public class LogThread extends Thread {
                 File file = new File("onlinePlayers.log");
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 while ((player = br.readLine()) != null) {
-                    String[] blacklistArr = Bot.readLog("blacklist.log").toString().split("\n");
+                    String[] blacklistArr = Bot.readLog("blacklist.log").split("\n");
                     HashMap<String, Long> blacklist = new HashMap<>();
                     for (String s : blacklistArr) {
                         if (!s.equals(""))
@@ -46,13 +46,18 @@ public class LogThread extends Thread {
                         fw.close();
                         Thread.sleep(2400);
                     } else {
-                        System.out.println(player + " is blacklisted.." + TimeUnit.MILLISECONDS.toHours(Math.abs(System.currentTimeMillis() - blacklist.get(player) - 604800000)) + "hours remaining..skipping");
+                        System.out.println("[BLK] " + player + " already blacklisted.." + TimeUnit.MILLISECONDS.toHours(Math.abs(System.currentTimeMillis() - blacklist.get(player) - 604800000)) + "hours remaining..");
                     }
                 }
                 br.close();
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+            try {
+                ParseThread.addToBlacklist(player);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
         }
     }
 }
