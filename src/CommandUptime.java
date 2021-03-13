@@ -59,7 +59,7 @@ public class CommandUptime extends ListenerAdapter {
 
     private static HashMap<String, Long> sortByValues(HashMap<String, Long> map) {
         List<Map.Entry<String, Long>> list = new LinkedList<>(map.entrySet());
-        list.sort((o1, o2) -> ((Comparable) o1.getValue()).compareTo(((o2)).getValue()));
+        list.sort(Map.Entry.comparingByValue());
         HashMap<String, Long> sortedHashMap = new LinkedHashMap<>();
         for (Map.Entry<String, Long> entry : list) sortedHashMap.put(entry.getKey(), entry.getValue());
         return sortedHashMap;
