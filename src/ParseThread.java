@@ -116,9 +116,10 @@ public class ParseThread extends Thread {
             if (key.equals("data")) {
                 JSONArray classes = playerJSON.getJSONArray("data").getJSONObject(0).getJSONArray("classes");
                 for (int i = 0; i < classes.length(); i++) {
-                    JSONArray completedQuests = classes.getJSONObject(i).getJSONObject("dungeons").getJSONArray("list");
+                    JSONArray completedQuests = classes.getJSONObject(i).getJSONObject("quests").getJSONArray("list");
                     for (int j = 0; j < completedQuests.length(); j++) {
-                        if (completedQuests.getJSONObject(j).getString("name").equals(questName))
+                        String name = (String) completedQuests.get(j);
+                        if (name.equals(questName))
                             return true;
                     }
                 }
