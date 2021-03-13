@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 public class Bot {
     public Settings settings = new Settings();
 
+    //TODO separate packages for commands, threads, etc.
     public Bot(String token) throws LoginException, IOException {
         JDA jda = JDABuilder.createLight(token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES)
                 .build();
@@ -23,12 +24,12 @@ public class Bot {
         jda.addEventListener(new CommandUptime());
         jda.addEventListener(new CommandPrefix());
 
-        LogThread wcLogThread = new LogThread("https://api.wynncraft.com/public_api.php?action=onlinePlayers", "wc.log", "wc");
+        LogThread onlineLogThread = new LogThread("https://api.wynncraft.com/public_api.php?action=onlinePlayers", "wc.log", "online");
         new Timer().schedule(new TimerTask() {
 
             @Override
             public void run() {
-                wcLogThread.run();
+                onlineLogThread.run();
             }
         }, 1000, 30000);
 
@@ -41,12 +42,12 @@ public class Bot {
             }
         }, 2000, 30000);
 
-        ParseThread playerParseThread = new ParseThread("wc.log", "player");
+        ParseThread onlineParseThread = new ParseThread("wc.log", "online");
         new Timer().schedule(new TimerTask() {
 
             @Override
             public void run() {
-                playerParseThread.run();
+                onlineParseThread.run();
             }
         }, 2000, 5000);
 
@@ -59,12 +60,12 @@ public class Bot {
             }
         }, 3000, 2400);
 
-        ParseThread chestsParseThread = new ParseThread("playerStats.log", "chests");
+        ParseThread playerStatsParseThread = new ParseThread("playerStats.log", "player");
         new Timer().schedule(new TimerTask() {
 
             @Override
             public void run() {
-                chestsParseThread.run();
+                playerStatsParseThread.run();
             }
         }, 4000, 2400);
 

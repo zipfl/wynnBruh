@@ -21,7 +21,7 @@ public class LogThread extends Thread {
     public void run() {
         try {
             JSONObject json;
-            if (mode.equals("wc")) {
+            if (mode.equals("online")) {
                 json = Bot.readJsonFromUrl(apiEndpoint);
                 new File(fileName);
                 FileWriter fw = new FileWriter(fileName);
