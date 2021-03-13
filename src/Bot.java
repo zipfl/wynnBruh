@@ -96,7 +96,7 @@ public class Bot {
         }
     }
 
-    public HashMap<String, Integer> sortByValue(HashMap<String, Integer> hm) {
+    public static HashMap<String, Integer> sortByValue(HashMap<String, Integer> hm) {
         List<Map.Entry<String, Integer>> list = new LinkedList<>(hm.entrySet());
         list.sort(Map.Entry.comparingByValue());
         HashMap<String, Integer> temp = new LinkedHashMap<>();

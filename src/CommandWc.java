@@ -64,7 +64,7 @@ public class CommandWc extends ListenerAdapter {
                         }
                     }
                 }
-                wcMap = Main.bot.sortByValue(wcMap);
+                wcMap = Bot.sortByValue(wcMap);
                 int i = 1;
                 for (Map.Entry<String, Integer> en : wcMap.entrySet()) {
                     message.append(":earth_americas: ").append(en.getKey()).append(": ").append(en.getValue()).append("\r\n");
