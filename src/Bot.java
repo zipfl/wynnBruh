@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 public class Bot {
     public Settings settings = new Settings();
 
-    //TODO separate packages for commands, threads, etc.
     public Bot(String token) throws LoginException, IOException {
         JDA jda = JDABuilder.createLight(token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES)
                 .build();

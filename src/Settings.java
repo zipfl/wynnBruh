@@ -7,9 +7,9 @@ public class Settings {
 
     public Settings() throws IOException {
         File propFile = new File("settings.properties");
-        if (propFile.exists() && properties.getProperty("prefix") != null) {
+        if (propFile.exists()) {
             properties.load(new FileInputStream("settings.properties"));
-            prefix = properties.getProperty("prefix");
+            prefix = properties.getProperty("prefix") != null ? "+" : properties.getProperty("prefix");
         } else {
             if (propFile.createNewFile()) {
                 System.out.println("settings.properties created");
