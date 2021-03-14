@@ -9,7 +9,7 @@ public class LogThread extends Thread {
     private final String apiEndpoint;
     private final String fileName;
     private final String mode;
-    String player;
+    private String player;
 
     public LogThread(String apiEndpoint, String fileName, String mode) {
         this.apiEndpoint = apiEndpoint;
@@ -38,7 +38,9 @@ public class LogThread extends Thread {
                             blacklist.put(s.split(",")[0], Long.parseLong(s.split(",")[1]));
                     }
                     Bot.removeFirstLine("onlinePlayers.log");
-                    if (!blacklist.containsKey(player) || System.currentTimeMillis() - blacklist.get(player) > 259200000) {
+
+                    int blacklistTimer = 259200000;
+                    if (!blacklist.containsKey(player) || System.currentTimeMillis() - blacklist.get(player) > blacklistTimer) {
                         json = Bot.readJsonFromUrl(String.format(apiEndpoint, player));
                         new File(fileName);
                         FileWriter fw = new FileWriter(fileName, true);
@@ -46,7 +48,7 @@ public class LogThread extends Thread {
                         fw.close();
                         Thread.sleep(2400);
                     } else {
-                        System.out.println("[BLK] " + player + " already blacklisted.." + TimeUnit.MILLISECONDS.toHours(Math.abs(System.currentTimeMillis() - blacklist.get(player) - 604800000)) + "hours remaining..");
+                        System.out.println("[BLK] " + player + " already blacklisted.." + TimeUnit.MILLISECONDS.toHours(Math.abs(System.currentTimeMillis() - blacklist.get(player) - blacklistTimer)) + "hours remaining..");
                     }
                 }
                 br.close();
