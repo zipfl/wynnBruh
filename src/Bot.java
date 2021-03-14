@@ -11,6 +11,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 public class Bot {
@@ -18,12 +19,14 @@ public class Bot {
 
     public static String emojiGlobe = "\uD83C\uDF0E";
     public static String emojiStar = "⭐";
+    public static String emojiChest = "\uD83D\uDCBC";
 
     public Bot(String token) throws LoginException, IOException {
         JDA jda = JDABuilder.createLight(token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES)
                 .build();
         jda.addEventListener(new CommandWc());
         jda.addEventListener(new CommandUptime());
+        jda.addEventListener(new CommandChest());
         jda.addEventListener(new CommandPrefix());
 
         LogThread onlineLogThread = new LogThread("https://api.wynncraft.com/public_api.php?action=onlinePlayers", "wc.log", "online");
@@ -163,5 +166,11 @@ public class Bot {
         while (reader.readLine() != null) lines++;
         reader.close();
         return lines;
+    }
+
+    public static String parseTimestampToHoursMinutes(long timestamp) {
+        long hours = TimeUnit.MILLISECONDS.toMinutes(timestamp) / 60;
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(timestamp) % 60;
+        return hours + "h " + minutes + "m";
     }
 }

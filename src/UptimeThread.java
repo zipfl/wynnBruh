@@ -3,10 +3,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class UptimeThread extends Thread {
-    private final HashMap<String, ServerStatus> uptimeMap = new HashMap<>();
+    private static final HashMap<String, ServerStatus> uptimeMap = new HashMap<>();
 
     public UptimeThread() {
         for (int i = 0; i < 80; i++) {
@@ -54,14 +55,12 @@ public class UptimeThread extends Thread {
             }
         }
     }
-}
 
-class ServerStatus {
-    public boolean isOnline;
-    public long changed;
+    public static long getServerUptime(String server) {
+        if (uptimeMap.get(server.toUpperCase(Locale.ROOT)).isOnline)
+            return System.currentTimeMillis() - uptimeMap.get(server.toUpperCase(Locale.ROOT)).changed;
 
-    public ServerStatus(boolean isOnline, long changed) {
-        this.isOnline = isOnline;
-        this.changed = changed;
+        return -1;
     }
 }
+

@@ -45,12 +45,12 @@ public class CommandUptime extends ListenerAdapter {
                             message.append(entry.getKey()).append(": ").append(" ");
                         else
                             message.append(entry.getKey()).append(": ");
-                        message.append(parseTimestampToHoursMinutes(System.currentTimeMillis() - entry.getValue())).append("\n");
+                        message.append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - entry.getValue())).append("\n");
                         amount--;
                         if (amount == 0) break;
                     }
                 } else {
-                    message.append(Bot.emojiGlobe).append(" ").append(server.toUpperCase(Locale.ROOT)).append(": ").append(parseTimestampToHoursMinutes(System.currentTimeMillis() - onlineMap.get(server.toUpperCase(Locale.ROOT)))).append("\n");
+                    message.append(Bot.emojiGlobe).append(" ").append(server.toUpperCase(Locale.ROOT)).append(": ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - onlineMap.get(server.toUpperCase(Locale.ROOT)))).append("\n");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -70,11 +70,5 @@ public class CommandUptime extends ListenerAdapter {
         HashMap<String, Long> sortedHashMap = new LinkedHashMap<>();
         for (Map.Entry<String, Long> entry : list) sortedHashMap.put(entry.getKey(), entry.getValue());
         return sortedHashMap;
-    }
-
-    private static String parseTimestampToHoursMinutes(long timestamp) {
-        long hours = TimeUnit.MILLISECONDS.toMinutes(timestamp) / 60;
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(timestamp) % 60;
-        return hours + "h " + minutes + "m";
     }
 }
