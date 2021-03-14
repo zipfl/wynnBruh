@@ -20,10 +20,10 @@ public class CommandChest extends ListenerAdapter {
             if (msg.getContentRaw().trim().contains(" ")) {
                 server = msg.getContentRaw().trim().split(" ")[1];
             }
-            
+
             try {
                 if (server != null) {
-                    message.append(Bot.emojiChest).append(" ").append(server).append(" chest log\n");
+                    message.append(Bot.emojiChest).append(" ").append(server).append(" chest log\n\n");
 
                     String[] chestLogArr = Bot.readLog("chests_" + server.toUpperCase(Locale.ROOT) + ".log").split("\n");
                     ArrayList<String> playerList = new ArrayList<>();
@@ -50,12 +50,12 @@ public class CommandChest extends ListenerAdapter {
                                 long nextTimestamp = Long.parseLong(currentPlayerChestLog.get(i + 1).split(",")[2]);
                                 int chests = Integer.parseInt(currentPlayerChestLog.get(i).split(",")[1]);
                                 int nextChests = Integer.parseInt(currentPlayerChestLog.get(i + 1).split(",")[1]);
-                                if (timestamp < nextTimestamp && chests != nextChests) {
+                                if (timestamp < nextTimestamp && chests != nextChests && System.currentTimeMillis() - timestamp < UptimeThread.getServerUptime(server)) {
                                     chestCount += nextChests - chests;
                                     timestampAgo = nextTimestamp;
                                 }
                             }
-                            if (chestCount != 0 && System.currentTimeMillis() - timestampAgo < UptimeThread.getServerUptime(server)) {
+                            if (chestCount != 0) {
                                 message.append(player).append(": ").append(chestCount).append(Bot.emojiChest).append(" ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - timestampAgo)).append(" ago\n");
                             }
                         }
