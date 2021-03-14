@@ -95,7 +95,8 @@ public class ParseThread extends Thread {
         HashMap<String, Long> blacklist = new HashMap<>();
         if (!blacklistArr[0].equals("")) {
             for (String blacklistEntry : blacklistArr) {
-                blacklist.put(blacklistEntry.split(",")[0], Long.parseLong(blacklistEntry.split(",")[1]));
+                if (blacklistEntry.split(",").length > 1)
+                    blacklist.put(blacklistEntry.split(",")[0], Long.parseLong(blacklistEntry.split(",")[1]));
             }
         }
         blacklist.put(username, System.currentTimeMillis());
