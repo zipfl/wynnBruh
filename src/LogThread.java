@@ -39,7 +39,7 @@ public class LogThread extends Thread {
                     }
                     Bot.removeFirstLine("onlinePlayers.log");
 
-                    int blacklistTimer = 259200000;
+                    long blacklistTimer = 259200000;
                     if (!blacklist.containsKey(player) || System.currentTimeMillis() - blacklist.get(player) > blacklistTimer) {
                         json = Bot.readJsonFromUrl(String.format(apiEndpoint, player));
                         new File(fileName);
@@ -47,8 +47,6 @@ public class LogThread extends Thread {
                         fw.write(json.toString() + "\n");
                         fw.close();
                         Thread.sleep(2400);
-                    } else {
-                        System.out.println("[BLK] " + player + " already blacklisted.." + TimeUnit.MILLISECONDS.toHours(Math.abs(System.currentTimeMillis() - blacklist.get(player) - blacklistTimer)) + "hours remaining..");
                     }
                 }
                 br.close();
