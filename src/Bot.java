@@ -30,7 +30,7 @@ public class Bot {
             public void run() {
                 onlineLogThread.run();
             }
-        }, 1000, 30000);
+        }, 1000, 2000);
 
         UptimeThread uptimeThread = new UptimeThread();
         new Timer().schedule(new TimerTask() {
@@ -39,7 +39,7 @@ public class Bot {
             public void run() {
                 uptimeThread.run();
             }
-        }, 2000, 30000);
+        }, 2000, 2000);
 
         ParseThread onlineParseThread = new ParseThread("wc.log", "online");
         new Timer().schedule(new TimerTask() {
