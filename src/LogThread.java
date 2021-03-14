@@ -38,7 +38,7 @@ public class LogThread extends Thread {
                             blacklist.put(s.split(",")[0], Long.parseLong(s.split(",")[1]));
                     }
                     Bot.removeFirstLine("onlinePlayers.log");
-                    if (!blacklist.containsKey(player) || System.currentTimeMillis() - blacklist.get(player) > 604800000) {
+                    if (!blacklist.containsKey(player) || System.currentTimeMillis() - blacklist.get(player) > 259200000) {
                         json = Bot.readJsonFromUrl(String.format(apiEndpoint, player));
                         new File(fileName);
                         FileWriter fw = new FileWriter(fileName, true);
