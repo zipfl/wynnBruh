@@ -6,8 +6,9 @@ import net.dv8tion.jda.api.utils.MarkdownUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class CommandUptime extends ListenerAdapter {
     private final HashMap<String, ServerStatus> uptimeMap = new HashMap<>();
@@ -31,14 +32,13 @@ public class CommandUptime extends ListenerAdapter {
                     }
                 }
                 if (server == null || Bot.isNumeric(server)) {
-                    HashMap<String, Long> sortedOnlineMap = sortByValues(onlineMap);
-                    int amount = Bot.isNumeric(server) ? Integer.parseInt(server): 5;
+                    HashMap<String, Long> sortedOnlineMap = Bot.sortByValues(onlineMap);
+                    int amount = Bot.isNumeric(server) ? Integer.parseInt(server) : 5;
                     int first = amount;
                     for (Map.Entry<String, Long> entry : sortedOnlineMap.entrySet()) {
                         if (amount == first) {
                             message.append(Bot.emojiStar).append(" ");
-                        }
-                        else {
+                        } else {
                             message.append(Bot.emojiGlobe).append(" ");
                         }
                         if (entry.getKey().length() == 3)
@@ -62,13 +62,5 @@ public class CommandUptime extends ListenerAdapter {
             else
                 channel.sendMessage("There was an error processing your request").queue();
         }
-    }
-
-    private static HashMap<String, Long> sortByValues(HashMap<String, Long> map) {
-        List<Map.Entry<String, Long>> list = new LinkedList<>(map.entrySet());
-        list.sort(Map.Entry.comparingByValue());
-        HashMap<String, Long> sortedHashMap = new LinkedHashMap<>();
-        for (Map.Entry<String, Long> entry : list) sortedHashMap.put(entry.getKey(), entry.getValue());
-        return sortedHashMap;
     }
 }

@@ -173,4 +173,12 @@ public class Bot {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(timestamp) % 60;
         return hours + "h " + minutes + "m";
     }
+
+    public static HashMap<String, Long> sortByValues(HashMap<String, Long> map) {
+        List<Map.Entry<String, Long>> list = new LinkedList<>(map.entrySet());
+        list.sort(Map.Entry.comparingByValue());
+        HashMap<String, Long> sortedHashMap = new LinkedHashMap<>();
+        for (Map.Entry<String, Long> entry : list) sortedHashMap.put(entry.getKey(), entry.getValue());
+        return sortedHashMap;
+    }
 }
