@@ -3,13 +3,13 @@ import java.util.Properties;
 
 public class Settings {
     private final Properties properties = new Properties();
-    private String prefix = "#";
+    private String prefix;
 
     public Settings() throws IOException {
         File propFile = new File("settings.properties");
         if (propFile.exists()) {
             properties.load(new FileInputStream("settings.properties"));
-            prefix = properties.getProperty("prefix") != null ? "+" : properties.getProperty("prefix");
+            prefix = properties.getProperty("prefix") == null ? "+" : properties.getProperty("prefix");
         } else {
             if (propFile.createNewFile()) {
                 System.out.println("settings.properties created");
