@@ -2,6 +2,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.utils.MarkdownUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -34,22 +35,28 @@ public class CommandUptime extends ListenerAdapter {
                     int amount = Bot.isNumeric(server) ? Integer.parseInt(server): 5;
                     int first = amount;
                     for (Map.Entry<String, Long> entry : sortedOnlineMap.entrySet()) {
-                        if (amount == first)
-                            message.append(":star: ").append(entry.getKey()).append(": ").append(parseTimestampToHoursMinutes(System.currentTimeMillis() - entry.getValue())).append("\n");
+                        if (amount == first) {
+                            message.append(Bot.emojiStar).append(" ");
+                        }
+                        else {
+                            message.append(Bot.emojiGlobe).append(" ");
+                        }
+                        if (entry.getKey().length() == 3)
+                            message.append(entry.getKey()).append(": ").append(" ");
                         else
-                            message.append(":earth_americas: ").append(entry.getKey()).append(": ").append(parseTimestampToHoursMinutes(System.currentTimeMillis() - entry.getValue())).append("\n");
+                            message.append(entry.getKey()).append(": ");
+                        message.append(parseTimestampToHoursMinutes(System.currentTimeMillis() - entry.getValue())).append("\n");
                         amount--;
                         if (amount == 0) break;
                     }
                 } else {
-                    message.append(":earth_americas: ").append(server.toUpperCase(Locale.ROOT)).append(": ").append(parseTimestampToHoursMinutes(System.currentTimeMillis() - onlineMap.get(server.toUpperCase(Locale.ROOT)))).append("\n");
+                    message.append(Bot.emojiGlobe).append(" ").append(server.toUpperCase(Locale.ROOT)).append(": ").append(parseTimestampToHoursMinutes(System.currentTimeMillis() - onlineMap.get(server.toUpperCase(Locale.ROOT)))).append("\n");
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            String finalMessage = message.toString();
+            String finalMessage = MarkdownUtil.codeblock(message.toString());
             if (!finalMessage.equals(""))
                 channel.sendMessage(finalMessage).queue();
             else

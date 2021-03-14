@@ -2,6 +2,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.utils.MarkdownUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -41,16 +42,14 @@ public class CommandWc extends ListenerAdapter {
                     if (key.equals("request"))
                         continue;
 
-                    if (json.get(key) instanceof JSONArray && key.equals("WC" + cmd)) {
-                        message.append("> :earth_americas: ").append(key).append(": ").append(((JSONArray) json.get(key)).length()).append("\r\n");
+                    if (json.get(key) instanceof JSONArray && key.equals("WC" + cmd.trim())) {
+                        message.append(Bot.emojiGlobe).append(" ").append(key).append(": ").append(((JSONArray) json.get(key)).length()).append(" online\r\n");
                         for (int i = 0; i < ((JSONArray) json.get(key)).length(); i++) {
                             message.append(((JSONArray) json.get(key)).get(i));
                             message.append("\n");
                         }
                     }
                 }
-            } else if (cmd != null && cmd.trim().equals("chest")) {
-                //TODO
             } else {
                 HashMap<String, Integer> wcMap = new HashMap<>();
                 while (keys.hasNext()) {
@@ -67,15 +66,15 @@ public class CommandWc extends ListenerAdapter {
                 wcMap = Bot.sortByValue(wcMap);
                 int i = 1;
                 for (Map.Entry<String, Integer> en : wcMap.entrySet()) {
-                    message.append(":earth_americas: ").append(en.getKey()).append(": ").append(en.getValue()).append("\r\n");
+                    message.append(Bot.emojiGlobe).append(" ").append(en.getKey()).append(": ").append(en.getValue()).append(" online\r\n");
                     i++;
                     if (i > 10)
                         break;
                 }
             }
 
-            String finalMessage = message.toString();
-            if (!finalMessage.equals(""))
+            String finalMessage = MarkdownUtil.codeblock(message.toString());
+            if (!finalMessage.equals("``````"))
                 channel.sendMessage(finalMessage).queue();
             else
                 channel.sendMessage("There was an error processing your request").queue();
