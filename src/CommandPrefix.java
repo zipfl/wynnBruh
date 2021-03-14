@@ -8,7 +8,7 @@ public class CommandPrefix extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         Message msg = event.getMessage();
-        if (msg.getContentRaw().startsWith(Main.bot.settings.getPrefix()) && msg.getContentRaw().contains("prefix")) {
+        if (msg.getContentRaw().startsWith(Main.bot.settings.getPrefix()) && msg.getContentRaw().indexOf("prefix") == Main.bot.settings.getPrefix().length()) {
             MessageChannel channel = event.getChannel();
             StringBuilder message = new StringBuilder();
             String cmd = null;

@@ -15,7 +15,7 @@ public class CommandUptime extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         Message msg = event.getMessage();
-        if (msg.getContentRaw().startsWith(Main.bot.settings.getPrefix()) && msg.getContentRaw().contains("up")) {
+        if (msg.getContentRaw().startsWith(Main.bot.settings.getPrefix()) && msg.getContentRaw().indexOf("up") == Main.bot.settings.getPrefix().length()) {
             MessageChannel channel = event.getChannel();
             StringBuilder message = new StringBuilder();
             String server = null;
@@ -35,14 +35,14 @@ public class CommandUptime extends ListenerAdapter {
                     int first = amount;
                     for (Map.Entry<String, Long> entry : sortedOnlineMap.entrySet()) {
                         if (amount == first)
-                            message.append(":star: ").append(entry.getKey()).append(": ").append(TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - entry.getValue())).append(" min\n");
+                            message.append(":star: ").append(entry.getKey()).append(": ").append(parseTimestampToHoursMinutes(System.currentTimeMillis() - entry.getValue())).append("\n");
                         else
-                            message.append(":earth_americas: ").append(entry.getKey()).append(": ").append(TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - entry.getValue())).append(" min\n");
+                            message.append(":earth_americas: ").append(entry.getKey()).append(": ").append(parseTimestampToHoursMinutes(System.currentTimeMillis() - entry.getValue())).append("\n");
                         amount--;
                         if (amount == 0) break;
                     }
                 } else {
-                    message.append(":earth_americas: ").append(server.toUpperCase(Locale.ROOT)).append(": ").append(TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - onlineMap.get(server.toUpperCase(Locale.ROOT)))).append(" min\n");
+                    message.append(":earth_americas: ").append(server.toUpperCase(Locale.ROOT)).append(": ").append(parseTimestampToHoursMinutes(System.currentTimeMillis() - onlineMap.get(server.toUpperCase(Locale.ROOT)))).append("\n");
                 }
 
             } catch (IOException e) {
@@ -63,5 +63,11 @@ public class CommandUptime extends ListenerAdapter {
         HashMap<String, Long> sortedHashMap = new LinkedHashMap<>();
         for (Map.Entry<String, Long> entry : list) sortedHashMap.put(entry.getKey(), entry.getValue());
         return sortedHashMap;
+    }
+
+    private static String parseTimestampToHoursMinutes(long timestamp) {
+        long hours = TimeUnit.MILLISECONDS.toMinutes(timestamp) / 60;
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(timestamp) % 60;
+        return hours + "h " + minutes + "m";
     }
 }
