@@ -50,8 +50,7 @@ public class UptimeThread extends Thread {
         String[] uptimeArr = Bot.readLog("uptime.log").split("\n");
         if (!uptimeArr[0].equals("")) {
             for (String uptimeEntry : uptimeArr) {
-                boolean aBoolean = Boolean.parseBoolean(uptimeEntry.split(",")[1]);
-                uptimeMap.put(uptimeEntry.split(",")[0], new ServerStatus(aBoolean, Long.parseLong(uptimeEntry.split(",")[2])));
+                uptimeMap.put(uptimeEntry.split(",")[0], new ServerStatus(Boolean.parseBoolean(uptimeEntry.split(",")[1]), Long.parseLong(uptimeEntry.split(",")[2])));
             }
         }
     }

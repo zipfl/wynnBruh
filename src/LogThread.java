@@ -34,7 +34,7 @@ public class LogThread extends Thread {
                     String[] blacklistArr = Bot.readLog("blacklist.log").split("\n");
                     HashMap<String, Long> blacklist = new HashMap<>();
                     for (String s : blacklistArr) {
-                        if (!s.equals(""))
+                        if (!s.equals("") && s.split(",").length > 1)
                             blacklist.put(s.split(",")[0], Long.parseLong(s.split(",")[1]));
                     }
                     Bot.removeFirstLine("onlinePlayers.log");
