@@ -21,6 +21,7 @@ public class Bot {
     public static String emojiStar = "⭐";
     public static String emojiChest = "\uD83D\uDCBC";
     public static String emojiClock = "⏰";
+    public static String emojiPlayer = "\uD83D\uDE33";
 
     public Bot(String token) throws LoginException, IOException {
         JDA jda = JDABuilder.createLight(token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES)

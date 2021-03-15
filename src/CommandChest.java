@@ -26,14 +26,15 @@ public class CommandChest extends ListenerAdapter {
                         server = "WC" + server;
                     server = server.toUpperCase(Locale.ROOT);
 
-                    message.append(Bot.emojiChest).append(" ").append(server).append(" chest log\n\n");
-
+                    message.append(String.format("%1$-20s", Bot.emojiPlayer + "Player")).append(" | ").append(String.format("%1$10s", "Chests" + Bot.emojiChest)).append(" | ").append(Bot.emojiClock).append("Uptime").append("\n");
+                    message.append("-----------------------------------------------\n");
                     ArrayList<String> sortedChestLog = getChestListForServer(server);
                     for (String sortedChestLogEntry : sortedChestLog) {
                         long timestamp = Long.parseLong(sortedChestLogEntry.split(",")[0]);
                         String player = sortedChestLogEntry.split(",")[1];
                         int chestCount = Integer.parseInt(sortedChestLogEntry.split(",")[2]);
-                        message.append(player).append(": ").append(chestCount).append(Bot.emojiChest).append(" ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - timestamp)).append(" ago\n");
+
+                        message.append(String.format("%1$-20s", player)).append(" | ").append(String.format("%1$9s", chestCount)).append(Bot.emojiChest).append(" | ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - timestamp)).append("\n");
 
                     }
                 } else {
@@ -47,11 +48,11 @@ public class CommandChest extends ListenerAdapter {
                         }
                     }
                     serverChestMap = Bot.sortByIntValue(serverChestMap);
-                    message.append(String.format("%1$-6s", Bot.emojiGlobe + "WC")).append(" | ").append(String.format("%1$5s", "Chests" + Bot.emojiChest)).append(" | ").append(Bot.emojiClock).append("Uptime").append("\n");
-                    message.append("----------------------------\n");
+                    message.append(String.format("%1$-10s", Bot.emojiGlobe + "Server")).append(" | ").append(String.format("%1$9s", "Chests" + Bot.emojiChest)).append(" | ").append(Bot.emojiClock).append("Uptime").append("\n");
+                    message.append("-----------------------------------\n");
                     for (Map.Entry<String, Integer> en : serverChestMap.entrySet()) {
                         if (en.getValue() != 0)
-                            message.append(String.format("%1$-6s",en.getKey())).append(" | ").append(String.format("%1$9s",en.getValue())).append(" | ").append(Bot.parseTimestampToHoursMinutes(UptimeThread.getServerUptime(en.getKey()))).append("\n");
+                            message.append(String.format("%1$-10s", Bot.emojiGlobe + en.getKey())).append(" | ").append(String.format("%1$9s", en.getValue() + Bot.emojiChest)).append(" | ").append(Bot.parseTimestampToHoursMinutes(UptimeThread.getServerUptime(en.getKey()))).append("\n");
                     }
                 }
             } catch (IOException e) {
