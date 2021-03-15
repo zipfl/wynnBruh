@@ -26,7 +26,7 @@ public class CommandChest extends ListenerAdapter {
                         server = "WC" + server;
                     server = server.toUpperCase(Locale.ROOT);
 
-                    message.append(String.format("%1$-20s", Bot.emojiPlayer + "Player")).append(" | ").append(String.format("%1$10s", "Chests" + Bot.emojiChest)).append(" | ").append(Bot.emojiClock).append("Uptime").append("\n");
+                    message.append(String.format("%1$-20s", Bot.emojiPlayer + "Player")).append(" | ").append(String.format("%1$10s", "Chests" + Bot.emojiChest)).append(" | ").append(Bot.emojiClock).append("Timestamp").append("\n");
                     message.append("-----------------------------------------------\n");
                     ArrayList<String> sortedChestLog = getChestListForServer(server);
                     for (String sortedChestLogEntry : sortedChestLog) {
