@@ -33,8 +33,8 @@ public class CommandChest extends ListenerAdapter {
                         long timestamp = Long.parseLong(sortedChestLogEntry.split(",")[0]);
                         String player = sortedChestLogEntry.split(",")[1];
                         int chestCount = Integer.parseInt(sortedChestLogEntry.split(",")[2]);
-
-                        message.append(String.format("%1$-20s", player)).append(" | ").append(String.format("%1$9s", chestCount)).append(Bot.emojiChest).append(" | ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - timestamp)).append("\n");
+                        if(chestCount >= 0)
+                            message.append(String.format("%1$-20s", player)).append(" | ").append(String.format("%1$9s", chestCount)).append(Bot.emojiChest).append(" | ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - timestamp)).append("\n");
 
                     }
                 } else {
@@ -51,7 +51,7 @@ public class CommandChest extends ListenerAdapter {
                     message.append(String.format("%1$-10s", Bot.emojiGlobe + "Server")).append(" | ").append(String.format("%1$9s", "Chests" + Bot.emojiChest)).append(" | ").append(Bot.emojiClock).append("Uptime").append("\n");
                     message.append("-----------------------------------\n");
                     for (Map.Entry<String, Integer> en : serverChestMap.entrySet()) {
-                        if (en.getValue() != 0)
+                        if (en.getValue() >= 0)
                             message.append(String.format("%1$-10s", Bot.emojiGlobe + en.getKey())).append(" | ").append(String.format("%1$9s", en.getValue() + Bot.emojiChest)).append(" | ").append(Bot.parseTimestampToHoursMinutes(UptimeThread.getServerUptime(en.getKey()))).append("\n");
                     }
                 }
