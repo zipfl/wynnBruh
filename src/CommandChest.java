@@ -7,13 +7,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Locale;
 
 public class CommandChest extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         Message msg = event.getMessage();
-        if (msg.getContentRaw().startsWith(Main.bot.settings.getPrefix()) && msg.getContentRaw().indexOf("chest") == Main.bot.settings.getPrefix().length()) {
+        if (msg.getContentRaw().startsWith(Main.bot.settings.getPrefix()) && msg.getContentRaw().indexOf("c") == Main.bot.settings.getPrefix().length()) {
             MessageChannel channel = event.getChannel();
             StringBuilder message = new StringBuilder();
             String server = null;
@@ -23,6 +24,9 @@ public class CommandChest extends ListenerAdapter {
 
             try {
                 if (server != null) {
+                    if (Bot.isNumeric(server))
+                        server = "WC" + server;
+
                     message.append(Bot.emojiChest).append(" ").append(server).append(" chest log\n\n");
 
                     String[] chestLogArr = Bot.readLog("chests_" + server.toUpperCase(Locale.ROOT) + ".log").split("\n");
@@ -34,6 +38,7 @@ public class CommandChest extends ListenerAdapter {
                         }
                     }
 
+                    ArrayList<String> sortedChestLog = new ArrayList<>();
                     for (String player : playerList) {
                         ArrayList<String> currentPlayerChestLog = new ArrayList<>();
                         for (String chestLogEntry : chestLogArr) {
@@ -41,7 +46,6 @@ public class CommandChest extends ListenerAdapter {
                                 currentPlayerChestLog.add(chestLogEntry);
                             }
                         }
-
                         if (currentPlayerChestLog.size() > 1) {
                             int chestCount = 0;
                             long timestampAgo = 0;
@@ -54,11 +58,19 @@ public class CommandChest extends ListenerAdapter {
                                     chestCount += nextChests - chests;
                                     timestampAgo = nextTimestamp;
                                 }
-                            }
-                            if (chestCount != 0) {
-                                message.append(player).append(": ").append(chestCount).append(Bot.emojiChest).append(" ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - timestampAgo)).append(" ago\n");
+                                if (i == currentPlayerChestLog.size() - 2 && chestCount != 0) {
+                                    sortedChestLog.add(timestampAgo + "," + player + "," + chestCount);
+                                }
                             }
                         }
+                    }
+                    sortedChestLog.sort(Collections.reverseOrder());
+                    for (String sortedChestLogEntry : sortedChestLog) {
+                        long timestamp = Long.parseLong(sortedChestLogEntry.split(",")[0]);
+                        String player = sortedChestLogEntry.split(",")[1];
+                        int chestCount = Integer.parseInt(sortedChestLogEntry.split(",")[2]);
+                        message.append(player).append(": ").append(chestCount).append(Bot.emojiChest).append(" ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - timestamp)).append(" ago\n");
+
                     }
                 }
             } catch (IOException e) {
