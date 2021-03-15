@@ -47,9 +47,11 @@ public class CommandChest extends ListenerAdapter {
                         }
                     }
                     serverChestMap = Bot.sortByIntValue(serverChestMap);
+                    message.append(String.format("%1$-6s", Bot.emojiGlobe + "WC")).append(" | ").append(String.format("%1$5s", "Chests" + Bot.emojiChest)).append(" | ").append(Bot.emojiClock).append("Uptime").append("\n");
+                    message.append("----------------------------\n");
                     for (Map.Entry<String, Integer> en : serverChestMap.entrySet()) {
-                        if(en.getValue() != 0)
-                            message.append(en.getKey()).append(" ").append(en.getValue()).append("\n");
+                        if (en.getValue() != 0)
+                            message.append(String.format("%1$-6s",en.getKey())).append(" | ").append(String.format("%1$9s",en.getValue())).append(" | ").append(Bot.parseTimestampToHoursMinutes(UptimeThread.getServerUptime(en.getKey()))).append("\n");
                     }
                 }
             } catch (IOException e) {

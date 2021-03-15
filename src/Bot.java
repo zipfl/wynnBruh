@@ -20,6 +20,7 @@ public class Bot {
     public static String emojiGlobe = "\uD83C\uDF0E";
     public static String emojiStar = "⭐";
     public static String emojiChest = "\uD83D\uDCBC";
+    public static String emojiClock = "⏰";
 
     public Bot(String token) throws LoginException, IOException {
         JDA jda = JDABuilder.createLight(token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES)
@@ -166,7 +167,10 @@ public class Bot {
     public static String parseTimestampToHoursMinutes(long timestamp) {
         long hours = TimeUnit.MILLISECONDS.toMinutes(timestamp) / 60;
         long minutes = TimeUnit.MILLISECONDS.toMinutes(timestamp) % 60;
-        return hours + "h " + minutes + "m";
+        if (hours / 10 != 0)
+            return hours + "h " + minutes + "m";
+        else
+            return hours + "h  " + minutes + "m";
     }
 
     public static HashMap<String, Long> sortByLongValue(HashMap<String, Long> map) {
