@@ -97,7 +97,7 @@ public class Bot {
         }
     }
 
-    public static HashMap<String, Integer> sortByValue(HashMap<String, Integer> hm) {
+    public static HashMap<String, Integer> sortByIntValue(HashMap<String, Integer> hm) {
         List<Map.Entry<String, Integer>> list = new LinkedList<>(hm.entrySet());
         list.sort(Map.Entry.comparingByValue());
         HashMap<String, Integer> temp = new LinkedHashMap<>();
@@ -169,7 +169,7 @@ public class Bot {
         return hours + "h " + minutes + "m";
     }
 
-    public static HashMap<String, Long> sortByValues(HashMap<String, Long> map) {
+    public static HashMap<String, Long> sortByLongValue(HashMap<String, Long> map) {
         List<Map.Entry<String, Long>> list = new LinkedList<>(map.entrySet());
         list.sort(Map.Entry.comparingByValue());
         HashMap<String, Long> sortedHashMap = new LinkedHashMap<>();

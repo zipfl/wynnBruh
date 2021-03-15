@@ -35,7 +35,7 @@ public class CommandUptime extends ListenerAdapter {
 
                 }
                 if (server == null || Bot.isNumeric(server)) {
-                    HashMap<String, Long> sortedOnlineMap = Bot.sortByValues(onlineMap);
+                    HashMap<String, Long> sortedOnlineMap = Bot.sortByLongValue(onlineMap);
                     int amount = Bot.isNumeric(server) ? Integer.parseInt(server) : 5;
                     int first = amount;
                     for (Map.Entry<String, Long> entry : sortedOnlineMap.entrySet()) {
