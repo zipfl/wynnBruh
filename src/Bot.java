@@ -18,7 +18,6 @@ public class Bot {
     public Settings settings = new Settings();
 
     public static String emojiGlobe = "\uD83C\uDF0E";
-    public static String emojiStar = "⭐";
     public static String emojiChest = "\uD83D\uDCBC";
     public static String emojiClock = "⏰";
     public static String emojiPlayer = "\uD83D\uDE33";
@@ -168,10 +167,10 @@ public class Bot {
     public static String parseTimestampToHoursMinutes(long timestamp) {
         long hours = TimeUnit.MILLISECONDS.toMinutes(timestamp) / 60;
         long minutes = TimeUnit.MILLISECONDS.toMinutes(timestamp) % 60;
-        if (hours / 10 != 0)
-            return hours + "h " + minutes + "m";
-        else
-            return hours + "h  " + minutes + "m";
+        String res = "";
+        res += String.format("%1$2s",hours) + "h ";
+        res += String.format("%1$2s",minutes) + "m";
+        return res;
     }
 
     public static HashMap<String, Long> sortByLongValue(HashMap<String, Long> map) {
