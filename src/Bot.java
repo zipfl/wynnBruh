@@ -31,34 +31,30 @@ public class Bot {
 
         LogThread onlineLogThread = new LogThread("https://api.wynncraft.com/public_api.php?action=onlinePlayers", "wc.log", "online");
         new Timer().schedule(new TimerTask() {
-
             @Override
             public void run() {
                 onlineLogThread.run();
             }
-        }, 1000, 2000);
-
-        UptimeThread uptimeThread = new UptimeThread();
-        new Timer().schedule(new TimerTask() {
-
-            @Override
-            public void run() {
-                uptimeThread.run();
-            }
-        }, 2000, 2000);
+        }, 1000, 30000);
 
         ParseThread onlineParseThread = new ParseThread("wc.log", "online");
         new Timer().schedule(new TimerTask() {
-
             @Override
             public void run() {
                 onlineParseThread.run();
             }
-        }, 2000, 5000);
+        }, 2000, 2000);
+
+        UptimeThread uptimeThread = new UptimeThread();
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                uptimeThread.run();
+            }
+        }, 2000, 30000);
 
         LogThread playerStatsLogThread = new LogThread("https://api.wynncraft.com/v2/player/%s/stats","playerStats.log", "player");
         new Timer().schedule(new TimerTask() {
-
             @Override
             public void run() {
                 playerStatsLogThread.run();
@@ -67,7 +63,6 @@ public class Bot {
 
         ParseThread playerStatsParseThread = new ParseThread("playerStats.log", "player");
         new Timer().schedule(new TimerTask() {
-
             @Override
             public void run() {
                 playerStatsParseThread.run();

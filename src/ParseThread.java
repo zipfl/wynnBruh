@@ -23,7 +23,7 @@ public class ParseThread extends Thread {
     public void run() {
         try {
             if (mode.equals("online")) {
-                if (Bot.getLogLineCount(inputFile) == 0)
+                if (Bot.getLogLineCount(inputFile) == 0 || Bot.getLogLineCount("onlinePlayers.log") != 0)
                     return;
                 JSONObject json = new JSONObject(Bot.readLog(inputFile));
                 ArrayList<String> onlinePlayers = new ArrayList<>();
