@@ -1,3 +1,5 @@
+import org.json.JSONObject;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,15 +21,19 @@ public class UptimeThread extends Thread {
     @Override
     public void run() {
         try {
-            getUptimeMap(uptimeMap);
-            String apiLog = Bot.readLog("wc.log");
-            String[] uptimeLog = Bot.readLog("uptime.log").split("\n");
+            String[] uptimeArr = Bot.readLog("uptime.log").split("\n");
+            if (!uptimeArr[0].equals("")) {
+                for (String uptimeEntry : uptimeArr) {
+                    uptimeMap.put(uptimeEntry.split(",")[0], new ServerStatus(Boolean.parseBoolean(uptimeEntry.split(",")[1]), Long.parseLong(uptimeEntry.split(",")[2])));
+                }
+            }
+            JSONObject apiLog = new JSONObject(Bot.readLog("wc.log"));
             ArrayList<String> allServers = new ArrayList<>();
-            for (String uptimeLogEntry : uptimeLog) {
+            for (String uptimeLogEntry : uptimeArr) {
                 allServers.add(uptimeLogEntry.split(",")[0]);
                 for (String server : allServers) {
-                    if (apiLog.contains(server)) {
-                        if (!server.equals("") && !uptimeMap.get(server).isOnline) {
+                    if (apiLog.has(server)) {
+                        if (!uptimeMap.get(server).isOnline) {
                             uptimeMap.put(server, new ServerStatus(true, System.currentTimeMillis()));
                         }
                     } else {
@@ -47,13 +53,8 @@ public class UptimeThread extends Thread {
         }
     }
 
-    public static void getUptimeMap(HashMap<String, ServerStatus> uptimeMap) throws IOException {
-        String[] uptimeArr = Bot.readLog("uptime.log").split("\n");
-        if (!uptimeArr[0].equals("")) {
-            for (String uptimeEntry : uptimeArr) {
-                uptimeMap.put(uptimeEntry.split(",")[0], new ServerStatus(Boolean.parseBoolean(uptimeEntry.split(",")[1]), Long.parseLong(uptimeEntry.split(",")[2])));
-            }
-        }
+    public static HashMap<String, ServerStatus> getUptimeMap() throws IOException {
+        return uptimeMap;
     }
 
     public static long getServerUptime(String server) {

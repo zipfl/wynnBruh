@@ -2,7 +2,6 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("BusyWait")
 public class LogThread extends Thread {

@@ -26,10 +26,11 @@ public class CommandChest extends ListenerAdapter {
                 if (server != null) {
                     if (Bot.isNumeric(server))
                         server = "WC" + server;
+                    server = server.toUpperCase(Locale.ROOT);
 
                     message.append(Bot.emojiChest).append(" ").append(server).append(" chest log\n\n");
 
-                    String[] chestLogArr = Bot.readLog("chests_" + server.toUpperCase(Locale.ROOT) + ".log").split("\n");
+                    String[] chestLogArr = Bot.readLog("chests_" + server + ".log").split("\n");
                     ArrayList<String> playerList = new ArrayList<>();
                     for (String chestLogEntry : chestLogArr) {
                         String currentPlayer = chestLogEntry.split(",")[0];

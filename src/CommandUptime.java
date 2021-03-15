@@ -11,7 +11,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class CommandUptime extends ListenerAdapter {
-    private final HashMap<String, ServerStatus> uptimeMap = new HashMap<>();
+    private HashMap<String, ServerStatus> uptimeMap;
     private final HashMap<String, Long> onlineMap = new HashMap<>();
 
     @Override
@@ -25,11 +25,14 @@ public class CommandUptime extends ListenerAdapter {
                 server = msg.getContentRaw().trim().split(" ")[1];
             }
             try {
-                UptimeThread.getUptimeMap(uptimeMap);
+                uptimeMap = UptimeThread.getUptimeMap();
                 for (Map.Entry<String, ServerStatus> entry : uptimeMap.entrySet()) {
                     if (entry.getValue().isOnline) {
                         onlineMap.put(entry.getKey(), entry.getValue().changed);
+                    } else {
+                        onlineMap.remove(entry.getKey());
                     }
+
                 }
                 if (server == null || Bot.isNumeric(server)) {
                     HashMap<String, Long> sortedOnlineMap = Bot.sortByValues(onlineMap);
