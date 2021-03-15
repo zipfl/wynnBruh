@@ -11,7 +11,6 @@ import java.util.Locale;
 import java.util.Map;
 
 public class CommandUptime extends ListenerAdapter {
-    private HashMap<String, ServerStatus> uptimeMap;
     private final HashMap<String, Long> onlineMap = new HashMap<>();
 
     @Override
@@ -25,35 +24,24 @@ public class CommandUptime extends ListenerAdapter {
                 server = msg.getContentRaw().trim().split(" ")[1];
             }
             try {
-                uptimeMap = UptimeThread.getUptimeMap();
+                HashMap<String, ServerStatus> uptimeMap = UptimeThread.getUptimeMap();
                 for (Map.Entry<String, ServerStatus> entry : uptimeMap.entrySet()) {
                     if (entry.getValue().isOnline) {
                         onlineMap.put(entry.getKey(), entry.getValue().changed);
                     } else {
                         onlineMap.remove(entry.getKey());
                     }
-
                 }
-                if (server == null || Bot.isNumeric(server)) {
+                if (server == null) {
                     HashMap<String, Long> sortedOnlineMap = Bot.sortByLongValue(onlineMap);
-                    int amount = Bot.isNumeric(server) ? Integer.parseInt(server) : 5;
-                    int first = amount;
                     for (Map.Entry<String, Long> entry : sortedOnlineMap.entrySet()) {
-                        if (amount == first) {
-                            message.append(Bot.emojiStar).append(" ");
-                        } else {
-                            message.append(Bot.emojiGlobe).append(" ");
-                        }
-                        if (entry.getKey().length() == 3)
-                            message.append(entry.getKey()).append(": ").append(" ");
-                        else
-                            message.append(entry.getKey()).append(": ");
-                        message.append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - entry.getValue())).append("\n");
-                        amount--;
-                        if (amount == 0) break;
+                        message.append(Bot.emojiGlobe).append(" ").append(String.format("%1$-4s", entry.getKey())).append(" | ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - entry.getValue())).append("\n");
                     }
                 } else {
-                    message.append(Bot.emojiGlobe).append(" ").append(server.toUpperCase(Locale.ROOT)).append(": ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - onlineMap.get(server.toUpperCase(Locale.ROOT)))).append("\n");
+                    if (Bot.isNumeric(server))
+                        server = "WC" + server;
+                    server = server.toUpperCase(Locale.ROOT);
+                    message.append(Bot.emojiGlobe).append(" ").append(String.format("%1$-4s", server)).append(" | ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - onlineMap.get(server.toUpperCase(Locale.ROOT)))).append("\n");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
