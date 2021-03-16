@@ -28,25 +28,24 @@ public class CommandChest extends ListenerAdapter {
 
                     message.append(String.format("%1$-20s", Bot.emojiPlayer + "Player")).append(" | ").append(String.format("%1$10s", "Chests" + Bot.emojiChest)).append(" | ").append(Bot.emojiClock).append("Timestamp").append("\n");
                     message.append("-----------------------------------------------\n");
-                    ArrayList<String> sortedChestLog = getChestListForServer(server);
+                    ArrayList<String> sortedChestLog = getChestList(server);
                     for (String sortedChestLogEntry : sortedChestLog) {
                         long timestamp = Long.parseLong(sortedChestLogEntry.split(",")[0]);
                         String player = sortedChestLogEntry.split(",")[1];
                         int chestCount = Integer.parseInt(sortedChestLogEntry.split(",")[2]);
-                        if(chestCount >= 0)
+                        if (chestCount >= 0)
                             message.append(String.format("%1$-20s", player)).append(" | ").append(String.format("%1$9s", chestCount)).append(Bot.emojiChest).append(" | ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - timestamp)).append("\n");
 
                     }
                 } else {
                     HashMap<String, Integer> serverChestMap = new HashMap<>();
-                    for (int i = 1; i < 80; i++) {
-                        ArrayList<String> sortedChestLog = getChestListForServer("WC" + i);
-                        int chestCount = 0;
-                        for (String sortedChestLogEntry : sortedChestLog) {
-                            chestCount += Integer.parseInt(sortedChestLogEntry.split(",")[2]);
-                            serverChestMap.put("WC" + i, chestCount);
-                        }
+
+                    ArrayList<String> sortedChestLog = getChestList(null);
+                    for (String sortedChestLogEntry : sortedChestLog) {
+                        int chestCount = Integer.parseInt(sortedChestLogEntry.split(",")[0]);
+                        serverChestMap.put(sortedChestLogEntry.split(",")[1], chestCount);
                     }
+
                     serverChestMap = Bot.sortByIntValue(serverChestMap);
                     message.append(String.format("%1$-10s", Bot.emojiGlobe + "Server")).append(" | ").append(String.format("%1$9s", "Chests" + Bot.emojiChest)).append(" | ").append(Bot.emojiClock).append("Uptime").append("\n");
                     message.append("-----------------------------------\n");
@@ -68,8 +67,8 @@ public class CommandChest extends ListenerAdapter {
     }
 
     @NotNull
-    private ArrayList<String> getChestListForServer(String server) throws IOException {
-        String[] chestLogArr = Bot.readLog("chests_" + server + ".log").split("\n");
+    private ArrayList<String> getChestList(String server) throws IOException {
+        String[] chestLogArr = Bot.readLog("chests.log").split("\n");
         ArrayList<String> playerList = new ArrayList<>();
         for (String chestLogEntry : chestLogArr) {
             String currentPlayer = chestLogEntry.split(",")[0];
@@ -77,7 +76,7 @@ public class CommandChest extends ListenerAdapter {
                 playerList.add(currentPlayer);
             }
         }
-
+        HashMap<String, Integer> serverChestMap = new HashMap<>();
         ArrayList<String> sortedChestLog = new ArrayList<>();
         for (String player : playerList) {
             ArrayList<String> currentPlayerChestLog = new ArrayList<>();
@@ -86,22 +85,40 @@ public class CommandChest extends ListenerAdapter {
                     currentPlayerChestLog.add(chestLogEntry);
                 }
             }
-            if (currentPlayerChestLog.size() > 1) {
-                int chestCount = 0;
-                long timestampAgo = 0;
-                for (int i = 0; i < currentPlayerChestLog.size() - 1; i++) {
-                    long timestamp = Long.parseLong(currentPlayerChestLog.get(i).split(",")[2]);
-                    long nextTimestamp = Long.parseLong(currentPlayerChestLog.get(i + 1).split(",")[2]);
-                    int chests = Integer.parseInt(currentPlayerChestLog.get(i).split(",")[1]);
-                    int nextChests = Integer.parseInt(currentPlayerChestLog.get(i + 1).split(",")[1]);
-                    if (timestamp < nextTimestamp && chests != nextChests && System.currentTimeMillis() - timestamp < UptimeThread.getServerUptime(server)) {
+
+            int chestCount = 0;
+            for (int i = 0; i < currentPlayerChestLog.size() - 1; i++) {
+                long timestamp = Long.parseLong(currentPlayerChestLog.get(i).split(",")[2]);
+                long nextTimestamp = Long.parseLong(currentPlayerChestLog.get(i + 1).split(",")[2]);
+                int chests = Integer.parseInt(currentPlayerChestLog.get(i).split(",")[1]);
+                int nextChests = Integer.parseInt(currentPlayerChestLog.get(i + 1).split(",")[1]);
+                if (server == null) {
+                    server = currentPlayerChestLog.get(i + 1).split(",")[3];
+                    if (timestamp < nextTimestamp && chests != nextChests && System.currentTimeMillis() - nextTimestamp < UptimeThread.getServerUptime(server)) {
                         chestCount += nextChests - chests;
-                        timestampAgo = nextTimestamp;
+                    }
+                    if (chestCount != 0) {
+                        if (serverChestMap.containsKey(server))
+                            serverChestMap.put(server, chestCount + serverChestMap.get(server));
+                        else
+                            serverChestMap.put(server, chestCount);
+                    }
+                    server = null;
+                    chestCount = 0;
+                } else {
+                    String nextServer = currentPlayerChestLog.get(i + 1).split(",")[3];
+                    if (nextServer.equals(server) && timestamp < nextTimestamp && chests != nextChests && System.currentTimeMillis() - nextTimestamp < UptimeThread.getServerUptime(server)) {
+                        chestCount += nextChests - chests;
                     }
                     if (i == currentPlayerChestLog.size() - 2 && chestCount != 0) {
-                        sortedChestLog.add(timestampAgo + "," + player + "," + chestCount);
+                        sortedChestLog.add(nextTimestamp + "," + player + "," + chestCount + "," + server);
                     }
                 }
+            }
+        }
+        if (server == null) {
+            for (Map.Entry<String, Integer> entry : serverChestMap.entrySet()) {
+                sortedChestLog.add(entry.getValue() + "," + entry.getKey());
             }
         }
         sortedChestLog.sort(Collections.reverseOrder());

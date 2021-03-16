@@ -16,6 +16,8 @@ public class UptimeThread extends Thread {
             ServerStatus serverStatus = new ServerStatus(false, 0L);
             uptimeMap.put("WC" + i, serverStatus);
         }
+        ServerStatus serverStatus = new ServerStatus(false, 0L);
+        uptimeMap.put("YT", serverStatus);
     }
 
     @Override

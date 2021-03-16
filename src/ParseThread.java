@@ -70,8 +70,8 @@ public class ParseThread extends Thread {
                                 addToBlacklist(username);
                             } else {
                                 if (server != null && !server.equals("null")) {
-                                    BufferedWriter bf = new BufferedWriter(new FileWriter("chests_" + server + ".log", true));
-                                    bf.write(username + "," + chests + "," + timestamp);
+                                    BufferedWriter bf = new BufferedWriter(new FileWriter("chests.log", true));
+                                    bf.write(username + "," + chests + "," + timestamp + "," + server);
                                     System.out.println("[CST] " + server + ": " + username + "," + chests + "," + timestamp);
                                     bf.newLine();
                                     bf.flush();
