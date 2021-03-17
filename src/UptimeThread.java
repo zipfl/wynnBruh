@@ -39,8 +39,10 @@ public class UptimeThread extends Thread {
                             uptimeMap.put(server, new ServerStatus(true, System.currentTimeMillis()));
                         }
                     } else {
-                        uptimeMap.put(server, new ServerStatus(false, System.currentTimeMillis()));
-                        Bot.deleteLinesFromChestLog(server);
+                        if (uptimeMap.get(server).isOnline) {
+                            uptimeMap.put(server, new ServerStatus(false, System.currentTimeMillis()));
+                            Bot.deleteLinesFromChestLog(server);
+                        }
                     }
                 }
             }
