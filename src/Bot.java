@@ -1,7 +1,9 @@
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MarkdownUtil;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +31,7 @@ public class Bot {
         jda.addEventListener(new CommandUptime());
         jda.addEventListener(new CommandChest());
         jda.addEventListener(new CommandPrefix());
+        jda.addEventListener(new CommandSus());
 
         LogThread onlineLogThread = new LogThread("https://api.wynncraft.com/public_api.php?action=onlinePlayers", "wc.log", "online");
         new Timer().schedule(new TimerTask() {
@@ -54,7 +57,7 @@ public class Bot {
             }
         }, 2000, 30000);
 
-        LogThread playerStatsLogThread = new LogThread("https://api.wynncraft.com/v2/player/%s/stats","playerStats.log", "player");
+        LogThread playerStatsLogThread = new LogThread("https://api.wynncraft.com/v2/player/%s/stats", "playerStats.log", "player");
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -168,8 +171,8 @@ public class Bot {
         long hours = TimeUnit.MILLISECONDS.toMinutes(timestamp) / 60;
         long minutes = TimeUnit.MILLISECONDS.toMinutes(timestamp) % 60;
         String res = "";
-        res += String.format("%1$2s",hours) + "h ";
-        res += String.format("%1$2s",minutes) + "m";
+        res += String.format("%1$2s", hours) + "h ";
+        res += String.format("%1$2s", minutes) + "m";
         return res;
     }
 
@@ -179,5 +182,25 @@ public class Bot {
         HashMap<String, Long> sortedHashMap = new LinkedHashMap<>();
         for (Map.Entry<String, Long> entry : list) sortedHashMap.put(entry.getKey(), entry.getValue());
         return sortedHashMap;
+    }
+
+    public static void sendMessage(MessageChannel channel, String message) {
+        String finalMessage = MarkdownUtil.codeblock(message);
+        if (!finalMessage.equals("``````"))
+            channel.sendMessage(finalMessage).queue();
+        else
+            channel.sendMessage("There was an error processing your request").queue();
+    }
+
+    public static synchronized void deleteLinesFromChestLog(String server) throws IOException {
+        String[] chestLog = readLog("chests.log").split("\n");
+        FileWriter fw = new FileWriter("chests.log", false);
+        for (String chestLogEntry : chestLog) {
+            String s = chestLogEntry.split(",")[3];
+            if (!s.equals(server)) {
+                fw.write(chestLogEntry + "\n");
+            }
+        }
+        fw.close();
     }
 }
