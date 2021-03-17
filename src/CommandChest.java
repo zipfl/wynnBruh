@@ -2,7 +2,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.utils.MarkdownUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -25,16 +24,19 @@ public class CommandChest extends ListenerAdapter {
                     if (Bot.isNumeric(server))
                         server = "WC" + server;
                     server = server.toUpperCase(Locale.ROOT);
-
-                    message.append(String.format("%1$-20s", Bot.emojiPlayer + "Player")).append(" | ").append(String.format("%1$10s", "Chests" + Bot.emojiChest)).append(" | ").append(Bot.emojiClock).append("Timestamp").append("\n");
-                    message.append("-----------------------------------------------\n");
+                    message.append(Bot.emojiGlobe).append(server).append(" ").append(Bot.emojiClock).append(Bot.parseTimestampToHoursMinutes(UptimeThread.getServerUptime(server))).append("\n\n");
+                    message.append(String.format("%1$-20s", Bot.emojiPlayer + "Player")).append(" | ").append(String.format("%1$10s", "Chests" + Bot.emojiChest)).append(" | ").append(Bot.emojiClock).append(" Timestamp").append("\n");
+                    message.append("-----------------------------------------------------\n");
                     ArrayList<String> sortedChestLog = getChestList(server);
                     for (String sortedChestLogEntry : sortedChestLog) {
-                        long timestamp = Long.parseLong(sortedChestLogEntry.split(",")[0]);
+                        long nextTimestamp = Long.parseLong(sortedChestLogEntry.split(",")[0]);
                         String player = sortedChestLogEntry.split(",")[1];
                         int chestCount = Integer.parseInt(sortedChestLogEntry.split(",")[2]);
+                        long timestamp = Long.parseLong(sortedChestLogEntry.split(",")[4]);
                         if (chestCount >= 0)
-                            message.append(String.format("%1$-20s", player)).append(" | ").append(String.format("%1$9s", chestCount)).append(Bot.emojiChest).append(" | ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - timestamp)).append("\n");
+                            message.append(String.format("%1$-20s", player)).append(" | ").append(String.format("%1$9s", chestCount))
+                                    .append(Bot.emojiChest).append(" | ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - nextTimestamp))
+                                    .append(" - ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - timestamp)).append("\n");
 
                     }
                 } else {
@@ -107,7 +109,7 @@ public class CommandChest extends ListenerAdapter {
                         chestCount += nextChests - chests;
                     }
                     if (i == currentPlayerChestLog.size() - 2 && chestCount != 0) {
-                        sortedChestLog.add(nextTimestamp + "," + player + "," + chestCount + "," + server);
+                        sortedChestLog.add(nextTimestamp + "," + player + "," + chestCount + "," + server + "," + timestamp);
                     }
                 }
             }
