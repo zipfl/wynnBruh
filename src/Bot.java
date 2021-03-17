@@ -185,11 +185,34 @@ public class Bot {
     }
 
     public static void sendMessage(MessageChannel channel, String message) {
-        String finalMessage = MarkdownUtil.codeblock(message);
-        if (!finalMessage.equals("``````"))
-            channel.sendMessage(finalMessage).queue();
-        else
-            channel.sendMessage("There was an error processing your request").queue();
+
+        if (message.length() > 2000) {
+            ArrayList<String> messageList = new ArrayList<>();
+            String[] messageArr = message.split("\n");
+            int charCount = 0;
+            StringBuilder msg = new StringBuilder();
+            for (int i = 0; i < messageArr.length - 1; i++) {
+                charCount += messageArr[i].length();
+                msg.append(messageArr[i]).append("\n");
+                if (charCount + messageArr[i + 1].length() > 1900) {
+                    messageList.add(msg.toString());
+                    charCount = 0;
+                    msg = new StringBuilder();
+                }
+                if (i == messageArr.length - 2) {
+                    messageList.add(msg + "\n");
+                }
+            }
+            for (String finalMsg : messageList) {
+                channel.sendMessage(MarkdownUtil.codeblock(finalMsg)).queue();
+            }
+        } else {
+            String finalMessage = MarkdownUtil.codeblock(message);
+            if (!finalMessage.equals("``````"))
+                channel.sendMessage(finalMessage).queue();
+            else
+                channel.sendMessage("There was an error processing your request").queue();
+        }
     }
 
     public static synchronized void deleteLinesFromChestLog(String server) throws IOException {
