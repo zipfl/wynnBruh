@@ -106,9 +106,9 @@ public class CommandChest extends ListenerAdapter {
                 } else {
                     String nextServer = currentPlayerChestLog.get(i + 1).split(",")[3];
                     if (nextServer.equals(server) && timestamp < nextTimestamp && chests != nextChests && System.currentTimeMillis() - nextTimestamp < 7200000) {
-                        chestCount += nextChests - chests;
+                        chestCount = nextChests - chests;
                     }
-                    if (i == currentPlayerChestLog.size() - 2 && chestCount != 0) {
+                    if (chestCount != 0) {
                         sortedChestLog.add(nextTimestamp + "," + player + "," + chestCount + "," + server + "," + timestamp);
                     }
                 }
