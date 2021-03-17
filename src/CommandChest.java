@@ -24,6 +24,7 @@ public class CommandChest extends ListenerAdapter {
                     if (Bot.isNumeric(server))
                         server = "WC" + server;
                     server = server.toUpperCase(Locale.ROOT);
+                    message.append("Chests looted in the last 2 hours, use c <number> for more detailed information");
                     message.append(Bot.emojiGlobe).append(server).append(" ").append(Bot.emojiClock).append(Bot.parseTimestampToHoursMinutes(UptimeThread.getServerUptime(server))).append("\n\n");
                     message.append(String.format("%1$-20s", Bot.emojiPlayer + "Player")).append(" | ").append(String.format("%1$10s", "Chests" + Bot.emojiChest)).append(" | ").append(Bot.emojiClock).append(" Timestamp").append("\n");
                     message.append("-----------------------------------------------------\n");
@@ -36,7 +37,7 @@ public class CommandChest extends ListenerAdapter {
                         if (chestCount >= 0)
                             message.append(String.format("%1$-20s", player)).append(" | ").append(String.format("%1$9s", chestCount))
                                     .append(Bot.emojiChest).append(" | ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - nextTimestamp))
-                                    .append(" - ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - timestamp)).append("\n");
+                                    .append("  - ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - timestamp)).append("\n");
 
                     }
                 } else {
