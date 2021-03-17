@@ -7,7 +7,7 @@ public class CommandSus extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         String msg = event.getMessage().getContentRaw();
-        if (msg.startsWith(Main.bot.settings.getPrefix()) && msg.indexOf("sus") == Main.bot.settings.getPrefix().length()) {
+        if (msg.startsWith(Main.bot.settings.getPrefix(event.getGuild().toString())) && msg.indexOf("sus") == Main.bot.settings.getPrefix(event.getGuild().toString()).length()) {
 
             StringBuilder sus = new StringBuilder();
             if (msg.trim().contains(" ")) {

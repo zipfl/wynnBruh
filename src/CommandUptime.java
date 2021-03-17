@@ -16,7 +16,7 @@ public class CommandUptime extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         Message msg = event.getMessage();
-        if (msg.getContentRaw().startsWith(Main.bot.settings.getPrefix()) && msg.getContentRaw().indexOf("up") == Main.bot.settings.getPrefix().length()) {
+        if (msg.getContentRaw().startsWith(Main.bot.settings.getPrefix(event.getGuild().toString())) && msg.getContentRaw().indexOf("up") == Main.bot.settings.getPrefix(event.getGuild().toString()).length()) {
             MessageChannel channel = event.getChannel();
             StringBuilder message = new StringBuilder();
             String server = null;

@@ -18,18 +18,23 @@ public class Settings {
             if (properties.getProperty("prefix") != null) {
                 prefix = properties.getProperty("prefix");
             }
-            setPrefix(prefix);
+            setPrefix("", prefix);
         }
         System.out.println("Prefix is '" + prefix + "'");
     }
 
-    public String getPrefix() {
-        return prefix;
+    public String getPrefix(String guild) {
+        if (properties.getProperty("prefix"+guild) != null)
+            return properties.getProperty("prefix"+guild);
+        else {
+            setPrefix(guild, "+");
+            return "+";
+        }
     }
 
-    public void setPrefix(String prefix) {
+    public void setPrefix(String guild, String prefix) {
         this.prefix = prefix;
-        properties.setProperty("prefix", prefix);
+        properties.setProperty("prefix" + guild, prefix);
         saveProperties();
     }
 

@@ -17,7 +17,7 @@ public class CommandWc extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         Message msg = event.getMessage();
-        if (msg.getContentRaw().startsWith(Main.bot.settings.getPrefix()) && msg.getContentRaw().indexOf("wc") == Main.bot.settings.getPrefix().length()) {
+        if (msg.getContentRaw().startsWith(Main.bot.settings.getPrefix(event.getGuild().toString())) && msg.getContentRaw().indexOf("wc") == Main.bot.settings.getPrefix(event.getGuild().toString()).length()) {
             MessageChannel channel = event.getChannel();
 
             JSONObject json = null;
