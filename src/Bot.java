@@ -185,7 +185,6 @@ public class Bot {
     }
 
     public static void sendMessage(MessageChannel channel, String message) {
-
         if (message.length() > 2000) {
             ArrayList<String> messageList = new ArrayList<>();
             String[] messageArr = message.split("\n");
@@ -203,8 +202,8 @@ public class Bot {
                     messageList.add(msg + "\n");
                 }
             }
-            for (String finalMsg : messageList) {
-                channel.sendMessage(MarkdownUtil.codeblock(finalMsg)).queue();
+            for (String finalMessage : messageList) {
+                channel.sendMessage(MarkdownUtil.codeblock(finalMessage)).queue();
             }
         } else {
             String finalMessage = MarkdownUtil.codeblock(message);

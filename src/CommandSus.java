@@ -6,12 +6,14 @@ import org.jetbrains.annotations.NotNull;
 public class CommandSus extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        Message msg = event.getMessage();
-        if (msg.getContentRaw().startsWith(Main.bot.settings.getPrefix()) && msg.getContentRaw().indexOf("sus") == Main.bot.settings.getPrefix().length()) {
+        String msg = event.getMessage().getContentRaw();
+        if (msg.startsWith(Main.bot.settings.getPrefix()) && msg.indexOf("sus") == Main.bot.settings.getPrefix().length()) {
 
-            String sus = "";
-            if (msg.getContentRaw().trim().contains(" ")) {
-                sus = msg.getContentRaw().trim().split(" ")[1];
+            StringBuilder sus = new StringBuilder();
+            if (msg.trim().contains(" ")) {
+                for(int i=1;i<msg.trim().split(" ").length;i++) {
+                    sus.append(msg.trim().split(" ")[i]).append(" ");
+                }
             }
 
             String message = "⠀⠀⠀⠀⠀⠀⠀⣠⣤⣤⣤⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ \n" +

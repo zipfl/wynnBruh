@@ -41,7 +41,6 @@ public class LogThread extends Thread {
                     long blacklistTimer = 259200000;
                     if (!blacklist.containsKey(player) || System.currentTimeMillis() - blacklist.get(player) > blacklistTimer) {
                         json = Bot.readJsonFromUrl(String.format(apiEndpoint, player));
-                        new File(fileName);
                         FileWriter fw = new FileWriter(fileName, true);
                         fw.write(json.toString() + "\n");
                         fw.close();
@@ -58,6 +57,11 @@ public class LogThread extends Thread {
                 ioException.printStackTrace();
             }
         }
+    }
+
+    public static int getOnlinePlayerCount() {
+        //TODO
+        return 0;
     }
 }
 
