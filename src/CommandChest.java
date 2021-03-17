@@ -90,7 +90,7 @@ public class CommandChest extends ListenerAdapter {
                 int nextChests = Integer.parseInt(currentPlayerChestLog.get(i + 1).split(",")[1]);
                 if (server == null) {
                     server = currentPlayerChestLog.get(i + 1).split(",")[3];
-                    if (timestamp < nextTimestamp && chests != nextChests && System.currentTimeMillis() - nextTimestamp < UptimeThread.getServerUptime(server)) {
+                    if (timestamp < nextTimestamp && chests != nextChests && System.currentTimeMillis() - nextTimestamp < 7200000) {
                         chestCount += nextChests - chests;
                     }
                     if (chestCount != 0) {
@@ -103,7 +103,7 @@ public class CommandChest extends ListenerAdapter {
                     chestCount = 0;
                 } else {
                     String nextServer = currentPlayerChestLog.get(i + 1).split(",")[3];
-                    if (nextServer.equals(server) && timestamp < nextTimestamp && chests != nextChests && System.currentTimeMillis() - nextTimestamp < UptimeThread.getServerUptime(server)) {
+                    if (nextServer.equals(server) && timestamp < nextTimestamp && chests != nextChests && System.currentTimeMillis() - nextTimestamp < 7200000) {
                         chestCount += nextChests - chests;
                     }
                     if (i == currentPlayerChestLog.size() - 2 && chestCount != 0) {
