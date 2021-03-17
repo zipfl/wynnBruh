@@ -47,11 +47,7 @@ public class CommandUptime extends ListenerAdapter {
                 e.printStackTrace();
             }
 
-            String finalMessage = MarkdownUtil.codeblock(message.toString());
-            if (!finalMessage.equals(""))
-                channel.sendMessage(finalMessage).queue();
-            else
-                channel.sendMessage("There was an error processing your request").queue();
+            Bot.sendMessage(channel, message.toString());
         }
     }
 }

@@ -2,7 +2,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.utils.MarkdownUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class CommandPrefix extends ListenerAdapter {
@@ -26,11 +25,7 @@ public class CommandPrefix extends ListenerAdapter {
                 message.append(Main.bot.settings.getPrefix());
             }
 
-            String finalMessage = MarkdownUtil.codeblock(message.toString());
-            if (!finalMessage.equals(""))
-                channel.sendMessage(finalMessage).queue();
-            else
-                channel.sendMessage("There was an error processing your request").queue();
+            Bot.sendMessage(channel, message.toString());
         }
     }
 }
