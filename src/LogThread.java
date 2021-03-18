@@ -26,6 +26,8 @@ public class LogThread extends Thread {
                 fw.write(json.toString() + "\n");
                 fw.close();
             } else if (mode.equals("player")) {
+                if (Bot.getLogLineCount(fileName) == 0)
+                    return;
                 String[] playerArr = Bot.readLog(fileName).split("\n");
                 String[] blacklistArr = Bot.readLog("blacklist.log").split("\n");
                 HashMap<String, Long> blacklist = new HashMap<>();
