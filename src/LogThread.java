@@ -1,6 +1,7 @@
 import org.json.JSONObject;
 
-import java.io.*;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 
 public class LogThread extends Thread {
@@ -34,17 +35,20 @@ public class LogThread extends Thread {
                 }
                 Bot.removeFirstLine(fileName);
 
-                //TODO fix blacklist with new forceupdate
-                //search for player in blacklist
-                //break; when not blacklisted
+                int counter = 0;
+                while(blacklist.containsKey(playerArr[counter])) {
+                    Bot.removeFirstLine(fileName);
+                    counter++;
+                }
+                player = playerArr[counter];
+
                 long blacklistTimer = 259200000;
-                if (!blacklist.containsKey(playerArr[0]) || System.currentTimeMillis() - blacklist.get(playerArr[0]) > blacklistTimer) {
+                if (!blacklist.containsKey(player) || System.currentTimeMillis() - blacklist.get(player) > blacklistTimer) {
                     json = Bot.readJsonFromUrl(String.format(apiEndpoint, playerArr[0]));
                     FileWriter fw = new FileWriter("playerStats.log", true);
                     fw.write(json.toString() + "\n");
                     fw.close();
                 }
-
             }
         } catch (IOException e) {
             e.printStackTrace();

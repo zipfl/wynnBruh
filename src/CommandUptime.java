@@ -2,7 +2,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.utils.MarkdownUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -11,7 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class CommandUptime extends ListenerAdapter {
-    private final HashMap<String, Long> onlineMap = new HashMap<>();
+    private static final HashMap<String, Long> onlineMap = new HashMap<>();
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
@@ -41,7 +40,10 @@ public class CommandUptime extends ListenerAdapter {
                     if (Bot.isNumeric(server))
                         server = "WC" + server;
                     server = server.toUpperCase(Locale.ROOT);
-                    message.append(Bot.emojiGlobe).append(" ").append(String.format("%1$-4s", server)).append(" | ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - onlineMap.get(server.toUpperCase(Locale.ROOT)))).append("\n");
+                    if (isServerOnline(server))
+                        message.append(Bot.emojiGlobe).append(" ").append(String.format("%1$-4s", server)).append(" | ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - onlineMap.get(server.toUpperCase(Locale.ROOT)))).append("\n");
+                    else
+                        message.append(server).append(" is offline");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -49,5 +51,9 @@ public class CommandUptime extends ListenerAdapter {
 
             Bot.sendMessage(channel, message.toString());
         }
+    }
+
+    public static boolean isServerOnline(String server) {
+        return onlineMap.containsKey(server);
     }
 }

@@ -18,25 +18,29 @@ public class CommandForceUpdate extends ListenerAdapter {
                 server += msg.trim().split(" ")[1];
             }
 
-            ArrayList<String> onlinePlayers = new ArrayList<>();
-            try {
-                JSONObject json = new JSONObject(Bot.readLog("wc.log"));
-                for (int i = 0; i < ((JSONArray) json.get(server)).length(); i++) {
-                    onlinePlayers.add(((JSONArray) json.get(server)).getString(i));
+            if (CommandUptime.isServerOnline(server)) {
+                ArrayList<String> onlinePlayers = new ArrayList<>();
+                try {
+                    JSONObject json = new JSONObject(Bot.readLog("wc.log"));
+                    for (int i = 0; i < ((JSONArray) json.get(server)).length(); i++) {
+                        onlinePlayers.add(((JSONArray) json.get(server)).getString(i));
+                    }
+
+                    StringBuilder onlineLog = new StringBuilder(Bot.readLog("onlinePlayers.log"));
+                    FileWriter fw = new FileWriter("onlinePlayers.log", false);
+                    for (String player : onlinePlayers) {
+                        onlineLog.insert(0, player + "\n");
+                    }
+                    fw.write(onlineLog.toString());
+                    fw.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
 
-                StringBuilder onlineLog = new StringBuilder(Bot.readLog("onlinePlayers.log"));
-                FileWriter fw = new FileWriter("onlinePlayers.log", false);
-                for (String player : onlinePlayers) {
-                    onlineLog.insert(0, player + "\n");
-                }
-                fw.write(onlineLog.toString());
-                fw.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+                Bot.sendMessage(event.getChannel(), "Prioritising " + Bot.emojiGlobe + server + " with " + onlinePlayers.size() + " players");
+            } else {
+                Bot.sendMessage(event.getChannel(), server + " is offline");
             }
-
-            Bot.sendMessage(event.getChannel(), "Prioritising " + Bot.emojiGlobe + server + " with " + onlinePlayers.size() + " players");
         }
     }
 }
