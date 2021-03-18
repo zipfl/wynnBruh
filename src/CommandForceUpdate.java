@@ -18,6 +18,7 @@ public class CommandForceUpdate extends ListenerAdapter {
                 server += msg.trim().split(" ")[1];
             }
 
+            int playerCount = 0;
             if (UptimeThread.isServerOnline(server)) {
                 ArrayList<String> onlinePlayers = new ArrayList<>();
                 try {
@@ -29,7 +30,10 @@ public class CommandForceUpdate extends ListenerAdapter {
                     StringBuilder onlineLog = new StringBuilder(Bot.readLog("onlinePlayers.log"));
                     FileWriter fw = new FileWriter("onlinePlayers.log", false);
                     for (String player : onlinePlayers) {
-                        onlineLog.insert(0, player + "\n");
+                        if (!ParseThread.isOnBlacklist(player)) {
+                            onlineLog.insert(0, player + "\n");
+                            playerCount += 1;
+                        }
                     }
                     fw.write(onlineLog.toString());
                     fw.close();
@@ -37,7 +41,7 @@ public class CommandForceUpdate extends ListenerAdapter {
                     e.printStackTrace();
                 }
 
-                Bot.sendMessage(event.getChannel(), "Prioritising " + Bot.emojiGlobe + server + " with " + onlinePlayers.size() + " players");
+                Bot.sendMessage(event.getChannel(), "Prioritising " + Bot.emojiGlobe + server + " with " + playerCount + " players, ignoring " + (onlinePlayers.size()-playerCount) + " blacklisted players");
             } else {
                 Bot.sendMessage(event.getChannel(), server + " is offline");
             }
