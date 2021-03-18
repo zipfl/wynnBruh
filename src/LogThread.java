@@ -8,7 +8,7 @@ public class LogThread extends Thread {
     private final String apiEndpoint;
     private final String fileName;
     private final String mode;
-    private String player; //TODO
+    private String player;
 
     public LogThread(String apiEndpoint, String fileName, String mode) {
         this.apiEndpoint = apiEndpoint;
@@ -35,20 +35,21 @@ public class LogThread extends Thread {
                 }
                 Bot.removeFirstLine(fileName);
 
+                long blacklistTimer = 259200000;
                 int counter = 0;
-                while(blacklist.containsKey(playerArr[counter])) {
-                    Bot.removeFirstLine(fileName);
-                    counter++;
+                while (blacklist.containsKey(playerArr[counter])) {
+                    if(System.currentTimeMillis() - blacklist.get(player) < blacklistTimer) {
+                        Bot.removeFirstLine(fileName);
+                        counter++;
+                    }
                 }
                 player = playerArr[counter];
 
-                long blacklistTimer = 259200000;
-                if (!blacklist.containsKey(player) || System.currentTimeMillis() - blacklist.get(player) > blacklistTimer) {
-                    json = Bot.readJsonFromUrl(String.format(apiEndpoint, playerArr[0]));
-                    FileWriter fw = new FileWriter("playerStats.log", true);
-                    fw.write(json.toString() + "\n");
-                    fw.close();
-                }
+                json = Bot.readJsonFromUrl(String.format(apiEndpoint, playerArr[0]));
+                FileWriter fw = new FileWriter("playerStats.log", true);
+                fw.write(json.toString() + "\n");
+                fw.close();
+                System.out.println(player + " cooldown");
             }
         } catch (IOException e) {
             e.printStackTrace();
