@@ -3,12 +3,11 @@ import org.json.JSONObject;
 import java.io.*;
 import java.util.HashMap;
 
-@SuppressWarnings("BusyWait")
 public class LogThread extends Thread {
     private final String apiEndpoint;
     private final String fileName;
     private final String mode;
-    private String player;
+    private String player; //TODO
 
     public LogThread(String apiEndpoint, String fileName, String mode) {
         this.apiEndpoint = apiEndpoint;
@@ -22,34 +21,32 @@ public class LogThread extends Thread {
             JSONObject json;
             if (mode.equals("online")) {
                 json = Bot.readJsonFromUrl(apiEndpoint);
-                new File(fileName);
                 FileWriter fw = new FileWriter(fileName);
                 fw.write(json.toString() + "\n");
                 fw.close();
             } else if (mode.equals("player")) {
-                File file = new File("onlinePlayers.log");
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                while ((player = br.readLine()) != null) {
-                    String[] blacklistArr = Bot.readLog("blacklist.log").split("\n");
-                    HashMap<String, Long> blacklist = new HashMap<>();
-                    for (String s : blacklistArr) {
-                        if (!s.equals("") && s.split(",").length > 1)
-                            blacklist.put(s.split(",")[0], Long.parseLong(s.split(",")[1]));
-                    }
-                    Bot.removeFirstLine("onlinePlayers.log");
-
-                    long blacklistTimer = 259200000;
-                    if (!blacklist.containsKey(player) || System.currentTimeMillis() - blacklist.get(player) > blacklistTimer) {
-                        json = Bot.readJsonFromUrl(String.format(apiEndpoint, player));
-                        FileWriter fw = new FileWriter(fileName, true);
-                        fw.write(json.toString() + "\n");
-                        fw.close();
-                        Thread.sleep(2400);
-                    }
+                String[] playerArr = Bot.readLog(fileName).split("\n");
+                String[] blacklistArr = Bot.readLog("blacklist.log").split("\n");
+                HashMap<String, Long> blacklist = new HashMap<>();
+                for (String s : blacklistArr) {
+                    if (!s.equals("") && s.split(",").length > 1)
+                        blacklist.put(s.split(",")[0], Long.parseLong(s.split(",")[1]));
                 }
-                br.close();
+                Bot.removeFirstLine(fileName);
+
+                //TODO fix blacklist with new forceupdate
+                //search for player in blacklist
+                //break; when not blacklisted
+                long blacklistTimer = 259200000;
+                if (!blacklist.containsKey(playerArr[0]) || System.currentTimeMillis() - blacklist.get(playerArr[0]) > blacklistTimer) {
+                    json = Bot.readJsonFromUrl(String.format(apiEndpoint, playerArr[0]));
+                    FileWriter fw = new FileWriter("playerStats.log", true);
+                    fw.write(json.toString() + "\n");
+                    fw.close();
+                }
+
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             try {
                 ParseThread.addToBlacklist(player);

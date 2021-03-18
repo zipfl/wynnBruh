@@ -60,7 +60,7 @@ public class Bot {
             }
         }, 2000, 30000);
 
-        LogThread playerStatsLogThread = new LogThread("https://api.wynncraft.com/v2/player/%s/stats", "playerStats.log", "player");
+        LogThread playerStatsLogThread = new LogThread("https://api.wynncraft.com/v2/player/%s/stats", "onlinePlayers.log", "player");
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {

@@ -64,12 +64,8 @@ public class CommandWc extends ListenerAdapter {
                     }
                 }
                 wcMap = Bot.sortByIntValue(wcMap);
-                int i = 1;
                 for (Map.Entry<String, Integer> en : wcMap.entrySet()) {
                     message.append(Bot.emojiGlobe).append(" ").append(en.getKey()).append(": ").append(en.getValue()).append(" online\r\n");
-                    i++;
-                    if (i > 10)
-                        break;
                 }
             }
 
