@@ -18,7 +18,7 @@ public class CommandForceUpdate extends ListenerAdapter {
                 server += msg.trim().split(" ")[1];
             }
 
-            if (CommandUptime.isServerOnline(server)) {
+            if (UptimeThread.isServerOnline(server)) {
                 ArrayList<String> onlinePlayers = new ArrayList<>();
                 try {
                     JSONObject json = new JSONObject(Bot.readLog("wc.log"));

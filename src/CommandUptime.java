@@ -40,7 +40,7 @@ public class CommandUptime extends ListenerAdapter {
                     if (Bot.isNumeric(server))
                         server = "WC" + server;
                     server = server.toUpperCase(Locale.ROOT);
-                    if (isServerOnline(server))
+                    if (UptimeThread.isServerOnline(server))
                         message.append(Bot.emojiGlobe).append(" ").append(String.format("%1$-4s", server)).append(" | ").append(Bot.parseTimestampToHoursMinutes(System.currentTimeMillis() - onlineMap.get(server.toUpperCase(Locale.ROOT)))).append("\n");
                     else
                         message.append(server).append(" is offline");
@@ -51,9 +51,5 @@ public class CommandUptime extends ListenerAdapter {
 
             Bot.sendMessage(channel, message.toString());
         }
-    }
-
-    public static boolean isServerOnline(String server) {
-        return onlineMap.containsKey(server);
     }
 }

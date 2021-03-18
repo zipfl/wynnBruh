@@ -37,20 +37,18 @@ public class LogThread extends Thread {
                 }
 
                 long blacklistTimer = 259200000;
-                int counter = 0;
-                while (blacklist.containsKey(playerArr[counter])) {
-                    if (System.currentTimeMillis() - blacklist.get(playerArr[counter]) < blacklistTimer) {
-                        System.out.println(playerArr[counter] + " cooldown");
+                while (blacklist.containsKey(playerArr[0])) {
+                    long l = System.currentTimeMillis() - blacklist.get(playerArr[0]);
+                    if (l < blacklistTimer) {
+                        System.out.println(playerArr[0] + " cooldown");
                         Bot.removeFirstLine(fileName);
-                        if (counter + 2 > playerArr.length)
-                            return;
-                        counter++;
+                        playerArr = Bot.readLog(fileName).split("\n");
                     } else {
                         break;
                     }
                 }
+                player = playerArr[0];
                 Bot.removeFirstLine(fileName);
-                player = playerArr[counter];
 
                 json = Bot.readJsonFromUrl(String.format(apiEndpoint, playerArr[0]));
                 FileWriter fw = new FileWriter("playerStats.log", true);

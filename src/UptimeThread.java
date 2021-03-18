@@ -63,10 +63,14 @@ public class UptimeThread extends Thread {
     }
 
     public static long getServerUptime(String server) {
-        if (uptimeMap.get(server.toUpperCase(Locale.ROOT)).isOnline)
+        if (uptimeMap.get(server).isOnline)
             return System.currentTimeMillis() - uptimeMap.get(server.toUpperCase(Locale.ROOT)).changed;
 
         return -1;
+    }
+
+    public static boolean isServerOnline(String server) {
+        return uptimeMap.get(server).isOnline;
     }
 }
 
