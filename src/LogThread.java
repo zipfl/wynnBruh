@@ -39,13 +39,15 @@ public class LogThread extends Thread {
                 long blacklistTimer = 259200000;
                 int counter = 0;
                 while (blacklist.containsKey(playerArr[counter])) {
-                    if(System.currentTimeMillis() - blacklist.get(playerArr[counter]) < blacklistTimer) {
+                    if (System.currentTimeMillis() - blacklist.get(playerArr[counter]) < blacklistTimer) {
                         System.out.println(playerArr[counter] + " cooldown");
                         Bot.removeFirstLine(fileName);
+                        if (counter + 2 > playerArr.length)
+                            return;
                         counter++;
-                    }
-                    else
+                    } else {
                         break;
+                    }
                 }
                 Bot.removeFirstLine(fileName);
                 player = playerArr[counter];
