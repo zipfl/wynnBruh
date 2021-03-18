@@ -24,7 +24,7 @@ public class CommandChest extends ListenerAdapter {
                     if (Bot.isNumeric(server))
                         server = "WC" + server;
                     server = server.toUpperCase(Locale.ROOT);
-                    message.append("Chests looted in the last 2 hours, use c <number> for more detailed information");
+                    message.append("Chests looted in the last 2 hours, use c <n> for more detailed information\n");
                     message.append(Bot.emojiGlobe).append(server).append(" ").append(Bot.emojiClock).append(Bot.parseTimestampToHoursMinutes(UptimeThread.getServerUptime(server))).append("\n\n");
                     message.append(String.format("%1$-20s", Bot.emojiPlayer + "Player")).append(" | ").append(String.format("%1$10s", "Chests" + Bot.emojiChest)).append(" | ").append(Bot.emojiClock).append(" Timestamp").append("\n");
                     message.append("-----------------------------------------------------\n");
@@ -106,12 +106,13 @@ public class CommandChest extends ListenerAdapter {
                     chestCount = 0;
                 } else {
                     String nextServer = currentPlayerChestLog.get(i + 1).split(",")[3];
-                    if (nextServer.equals(server) && timestamp < nextTimestamp && chests != nextChests && System.currentTimeMillis() - nextTimestamp < 7200000) {
+                    if (nextServer.equals(server) && timestamp < nextTimestamp && chests < nextChests && System.currentTimeMillis() - nextTimestamp < 7200000) {
                         chestCount = nextChests - chests;
                     }
-                    if (chestCount != 0) {
+                    if (chestCount > 0) {
                         sortedChestLog.add(nextTimestamp + "," + player + "," + chestCount + "," + server + "," + timestamp);
                     }
+                    chestCount = 0;
                 }
             }
         }
