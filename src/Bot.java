@@ -124,10 +124,8 @@ public class Bot {
 
     public static void removeFirstLine(String fileName) throws IOException {
         RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
-        //Initial write position
         long writePosition = raf.getFilePointer();
         raf.readLine();
-        // Shift the next lines upwards.
         long readPosition = raf.getFilePointer();
 
         byte[] buff = new byte[1024];

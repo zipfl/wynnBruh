@@ -3,6 +3,7 @@ import org.json.JSONObject;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class LogThread extends Thread {
     private final String apiEndpoint;
@@ -40,7 +41,7 @@ public class LogThread extends Thread {
                 while (blacklist.containsKey(playerArr[0])) {
                     long l = System.currentTimeMillis() - blacklist.get(playerArr[0]);
                     if (l < blacklistTimer) {
-                        System.out.println(playerArr[0] + " cooldown");
+                        System.out.println("[BLK] " + playerArr[0] + ": " + Bot.parseTimestampToHoursMinutes(Math.abs(System.currentTimeMillis() - blacklist.get(playerArr[0]) - blacklistTimer)) + " remaining");
                         Bot.removeFirstLine(fileName);
                         playerArr = Bot.readLog(fileName).split("\n");
                         if (playerArr[0].equals(""))
