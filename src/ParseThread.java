@@ -110,6 +110,18 @@ public class ParseThread extends Thread {
         bf.close();
     }
 
+    public static boolean isOnBlacklist(String player) throws IOException {
+        String[] blacklistArr = Bot.readLog("blacklist.log").split("\n");
+        if (!blacklistArr[0].equals("")) {
+            for (String blacklistEntry : blacklistArr) {
+                if (blacklistEntry.split(",")[0].equals(player)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static boolean hasQuest(JSONObject playerJSON, String questName) {
         Iterator<String> keys = playerJSON.keys();
         while (keys.hasNext()) {
