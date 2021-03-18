@@ -66,11 +66,6 @@ public class LogThread extends Thread {
             }
         }
     }
-
-    public static int getOnlinePlayerCount() {
-        //TODO
-        return 0;
-    }
 }
 
 

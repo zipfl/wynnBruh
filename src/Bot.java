@@ -34,7 +34,6 @@ public class Bot {
         jda.addEventListener(new CommandSus());
         jda.addEventListener(new CommandHelp());
         jda.addEventListener(new CommandForceUpdate());
-        //TODO CommandStat
 
         LogThread onlineLogThread = new LogThread("https://api.wynncraft.com/public_api.php?action=onlinePlayers", "wc.log", "online");
         new Timer().schedule(new TimerTask() {
