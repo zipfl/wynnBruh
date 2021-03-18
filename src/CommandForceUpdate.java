@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class CommandForceUpdate extends ListenerAdapter {
     @Override
@@ -41,7 +42,9 @@ public class CommandForceUpdate extends ListenerAdapter {
                     e.printStackTrace();
                 }
 
-                Bot.sendMessage(event.getChannel(), "Prioritising " + Bot.emojiGlobe + server + " with " + playerCount + " players, ignoring " + (onlinePlayers.size()-playerCount) + " blacklisted players");
+                Bot.sendMessage(event.getChannel(), "Prioritising " + Bot.emojiGlobe + server + " with " +
+                        playerCount + " players, ignoring " + (onlinePlayers.size() - playerCount) + " blacklisted players\n" +
+                        "Ready in ~" + TimeUnit.MILLISECONDS.toSeconds(playerCount * 2400L) + " seconds");
             } else {
                 Bot.sendMessage(event.getChannel(), server + " is offline");
             }
