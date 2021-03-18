@@ -43,6 +43,8 @@ public class LogThread extends Thread {
                         System.out.println(playerArr[0] + " cooldown");
                         Bot.removeFirstLine(fileName);
                         playerArr = Bot.readLog(fileName).split("\n");
+                        if (playerArr[0].equals(""))
+                            return;
                     } else {
                         break;
                     }
