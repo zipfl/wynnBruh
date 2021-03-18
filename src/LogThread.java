@@ -33,23 +33,25 @@ public class LogThread extends Thread {
                     if (!s.equals("") && s.split(",").length > 1)
                         blacklist.put(s.split(",")[0], Long.parseLong(s.split(",")[1]));
                 }
-                Bot.removeFirstLine(fileName);
 
                 long blacklistTimer = 259200000;
                 int counter = 0;
                 while (blacklist.containsKey(playerArr[counter])) {
-                    if(System.currentTimeMillis() - blacklist.get(player) < blacklistTimer) {
+                    if(System.currentTimeMillis() - blacklist.get(playerArr[counter]) < blacklistTimer) {
+                        System.out.println(playerArr[counter] + " cooldown");
                         Bot.removeFirstLine(fileName);
                         counter++;
                     }
+                    else
+                        break;
                 }
+                Bot.removeFirstLine(fileName);
                 player = playerArr[counter];
 
                 json = Bot.readJsonFromUrl(String.format(apiEndpoint, playerArr[0]));
                 FileWriter fw = new FileWriter("playerStats.log", true);
                 fw.write(json.toString() + "\n");
                 fw.close();
-                System.out.println(player + " cooldown");
             }
         } catch (IOException e) {
             e.printStackTrace();
