@@ -11,7 +11,7 @@ public class CommandSus extends ListenerAdapter {
 
             StringBuilder sus = new StringBuilder();
             if (msg.trim().contains(" ")) {
-                for(int i=1;i<msg.trim().split(" ").length;i++) {
+                for (int i = 1; i < msg.trim().split(" ").length; i++) {
                     sus.append(msg.trim().split(" ")[i]).append(" ");
                 }
             }

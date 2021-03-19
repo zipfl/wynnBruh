@@ -1,4 +1,3 @@
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -14,13 +13,13 @@ public class CommandUptime extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        Message msg = event.getMessage();
-        if (msg.getContentRaw().startsWith(Main.bot.settings.getPrefix(event.getGuild().toString())) && msg.getContentRaw().indexOf("up") == Main.bot.settings.getPrefix(event.getGuild().toString()).length()) {
+        String msg = event.getMessage().getContentRaw();
+        if (msg.startsWith(Main.bot.settings.getPrefix(event.getGuild().toString())) && msg.indexOf("up") == Main.bot.settings.getPrefix(event.getGuild().toString()).length()) {
             MessageChannel channel = event.getChannel();
             StringBuilder message = new StringBuilder();
             String server = null;
-            if (msg.getContentRaw().trim().contains(" ")) {
-                server = msg.getContentRaw().trim().split(" ")[1];
+            if (msg.trim().contains(" ")) {
+                server = msg.trim().split(" ")[1];
             }
             try {
                 HashMap<String, ServerStatus> uptimeMap = UptimeThread.getUptimeMap();
