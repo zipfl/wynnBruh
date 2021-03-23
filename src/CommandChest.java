@@ -87,32 +87,34 @@ public class CommandChest extends ListenerAdapter {
 
             int chestCount = 0;
             for (int i = 0; i < currentPlayerChestLog.size() - 1; i++) {
-                long timestamp = Long.parseLong(currentPlayerChestLog.get(i).split(",")[2]);
-                long nextTimestamp = Long.parseLong(currentPlayerChestLog.get(i + 1).split(",")[2]);
-                int chests = Integer.parseInt(currentPlayerChestLog.get(i).split(",")[1]);
-                int nextChests = Integer.parseInt(currentPlayerChestLog.get(i + 1).split(",")[1]);
-                if (server == null) {
-                    server = currentPlayerChestLog.get(i + 1).split(",")[3];
-                    if (timestamp < nextTimestamp && chests != nextChests && System.currentTimeMillis() - nextTimestamp < 7200000) {
-                        chestCount += nextChests - chests;
+                if (currentPlayerChestLog.get(i + 1).split(",").length == 4) {
+                    long timestamp = Long.parseLong(currentPlayerChestLog.get(i).split(",")[2]);
+                    long nextTimestamp = Long.parseLong(currentPlayerChestLog.get(i + 1).split(",")[2]);
+                    int chests = Integer.parseInt(currentPlayerChestLog.get(i).split(",")[1]);
+                    int nextChests = Integer.parseInt(currentPlayerChestLog.get(i + 1).split(",")[1]);
+                    if (server == null) {
+                        server = currentPlayerChestLog.get(i + 1).split(",")[3];
+                        if (timestamp < nextTimestamp && chests != nextChests && System.currentTimeMillis() - nextTimestamp < 7200000) {
+                            chestCount += nextChests - chests;
+                        }
+                        if (chestCount != 0) {
+                            if (serverChestMap.containsKey(server))
+                                serverChestMap.put(server, chestCount + serverChestMap.get(server));
+                            else
+                                serverChestMap.put(server, chestCount);
+                        }
+                        server = null;
+                    } else {
+                        String nextServer = currentPlayerChestLog.get(i + 1).split(",")[3];
+                        if (nextServer.equals(server) && timestamp < nextTimestamp && chests < nextChests && System.currentTimeMillis() - nextTimestamp < 7200000) {
+                            chestCount = nextChests - chests;
+                        }
+                        if (chestCount > 0) {
+                            sortedChestLog.add(nextTimestamp + "," + player + "," + chestCount + "," + server + "," + timestamp);
+                        }
                     }
-                    if (chestCount != 0) {
-                        if (serverChestMap.containsKey(server))
-                            serverChestMap.put(server, chestCount + serverChestMap.get(server));
-                        else
-                            serverChestMap.put(server, chestCount);
-                    }
-                    server = null;
-                } else {
-                    String nextServer = currentPlayerChestLog.get(i + 1).split(",")[3];
-                    if (nextServer.equals(server) && timestamp < nextTimestamp && chests < nextChests && System.currentTimeMillis() - nextTimestamp < 7200000) {
-                        chestCount = nextChests - chests;
-                    }
-                    if (chestCount > 0) {
-                        sortedChestLog.add(nextTimestamp + "," + player + "," + chestCount + "," + server + "," + timestamp);
-                    }
+                    chestCount = 0;
                 }
-                chestCount = 0;
             }
         }
         if (server == null) {

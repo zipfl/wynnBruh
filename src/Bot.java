@@ -218,9 +218,11 @@ public class Bot {
         String[] chestLog = readLog("chests.log").split("\n");
         FileWriter fw = new FileWriter("chests.log", false);
         for (String chestLogEntry : chestLog) {
-            String s = chestLogEntry.split(",")[3];
-            if (!s.equals(server)) {
-                fw.write(chestLogEntry + "\n");
+            if (chestLogEntry.split(",").length == 4) {
+                String s = chestLogEntry.split(",")[3];
+                if (!s.equals(server)) {
+                    fw.write(chestLogEntry + "\n");
+                }
             }
         }
         fw.close();
