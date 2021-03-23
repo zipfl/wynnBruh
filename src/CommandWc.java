@@ -28,21 +28,21 @@ public class CommandWc extends ListenerAdapter {
             }
             assert json != null;
 
-            String cmd = null;
+            String server = null;
             if (msg.getContentRaw().trim().contains(" ")) {
-                cmd = msg.getContentRaw().trim().split(" ")[1];
+                server = msg.getContentRaw().trim().split(" ")[1];
             }
 
             StringBuilder message = new StringBuilder();
             Iterator<String> keys = json.keys();
 
-            if (Bot.isNumeric(cmd)) {
+            if (Bot.isNumeric(server)) {
                 while (keys.hasNext()) {
                     String key = keys.next();
                     if (key.equals("request"))
                         continue;
 
-                    if (json.get(key) instanceof JSONArray && key.equals("WC" + cmd.trim())) {
+                    if (json.get(key) instanceof JSONArray && key.equals("WC" + server.trim())) {
                         message.append(Bot.emojiGlobe).append(" ").append(key).append(": ").append(((JSONArray) json.get(key)).length()).append(" online\r\n");
                         for (int i = 0; i < ((JSONArray) json.get(key)).length(); i++) {
                             message.append(((JSONArray) json.get(key)).get(i));

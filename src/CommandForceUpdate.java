@@ -14,39 +14,49 @@ public class CommandForceUpdate extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         String msg = event.getMessage().getContentRaw();
         if (msg.startsWith(Main.bot.settings.getPrefix(event.getGuild().toString())) && msg.indexOf("fu") == Main.bot.settings.getPrefix(event.getGuild().toString()).length()) {
-            String server = "WC";
+            String arg = null;
             if (msg.trim().contains(" ")) {
-                server += msg.trim().split(" ")[1];
+                arg = msg.trim().split(" ")[1];
             }
+            try {
+                if (Bot.isNumeric(arg)) {
+                    arg = "WC" + arg;
+                    int playerCount = 0;
+                    if (UptimeThread.isServerOnline(arg)) {
+                        ArrayList<String> onlinePlayers = new ArrayList<>();
+                        JSONObject json = new JSONObject(Bot.readLog("wc.log"));
+                        for (int i = 0; i < ((JSONArray) json.get(arg)).length(); i++) {
+                            onlinePlayers.add(((JSONArray) json.get(arg)).getString(i));
+                        }
 
-            int playerCount = 0;
-            if (UptimeThread.isServerOnline(server)) {
-                ArrayList<String> onlinePlayers = new ArrayList<>();
-                try {
-                    JSONObject json = new JSONObject(Bot.readLog("wc.log"));
-                    for (int i = 0; i < ((JSONArray) json.get(server)).length(); i++) {
-                        onlinePlayers.add(((JSONArray) json.get(server)).getString(i));
+                        StringBuilder onlineLog = new StringBuilder(Bot.readLog("onlinePlayers.log"));
+                        FileWriter fw = new FileWriter("onlinePlayers.log", false);
+                        for (String player : onlinePlayers) {
+                            if (!ParseThread.isOnBlacklist(player)) {
+                                onlineLog.insert(0, player + "\n");
+                                playerCount += 1;
+                            }
+                        }
+                        fw.write(onlineLog.toString());
+                        fw.close();
+
+                        Bot.sendMessage(event.getChannel(), "Prioritising " + Bot.emojiGlobe + arg + " with " +
+                                playerCount + " players, ignoring " + (onlinePlayers.size() - playerCount) + " blacklisted players\n" +
+                                "Ready in ~" + TimeUnit.MILLISECONDS.toSeconds(playerCount * 2400L) + " seconds");
+                    } else {
+                        Bot.sendMessage(event.getChannel(), arg + " is offline");
                     }
-
+                } else {
                     StringBuilder onlineLog = new StringBuilder(Bot.readLog("onlinePlayers.log"));
                     FileWriter fw = new FileWriter("onlinePlayers.log", false);
-                    for (String player : onlinePlayers) {
-                        if (!ParseThread.isOnBlacklist(player)) {
-                            onlineLog.insert(0, player + "\n");
-                            playerCount += 1;
-                        }
-                    }
+                    onlineLog.insert(0, arg + "\n");
                     fw.write(onlineLog.toString());
                     fw.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
-                Bot.sendMessage(event.getChannel(), "Prioritising " + Bot.emojiGlobe + server + " with " +
-                        playerCount + " players, ignoring " + (onlinePlayers.size() - playerCount) + " blacklisted players\n" +
-                        "Ready in ~" + TimeUnit.MILLISECONDS.toSeconds(playerCount * 2400L) + " seconds");
-            } else {
-                Bot.sendMessage(event.getChannel(), server + " is offline");
+                    Bot.sendMessage(event.getChannel(), "Force updating " + arg);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

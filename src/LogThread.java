@@ -3,7 +3,6 @@ import org.json.JSONObject;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 public class LogThread extends Thread {
     private final String apiEndpoint;

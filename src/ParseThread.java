@@ -80,7 +80,6 @@ public class ParseThread extends Thread {
                                     System.out.println("[OFF] " + username + " is already offline..");
                                 }
                             }
-
                         }
                     }
                 }
