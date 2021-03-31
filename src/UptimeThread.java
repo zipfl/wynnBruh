@@ -40,7 +40,7 @@ public class UptimeThread extends Thread {
                             Bot.deleteLinesFromChestLog(server);
                         }
                     } else {
-                        if (uptimeMap.get(server).isOnline) {
+                        if (uptimeMap.get(server) != null && uptimeMap.get(server).isOnline) {
                             uptimeMap.put(server, new ServerStatus(false, System.currentTimeMillis()));
                         }
                     }
