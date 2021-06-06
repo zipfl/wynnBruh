@@ -1,4 +1,3 @@
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -7,7 +6,7 @@ public class CommandSus extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         String msg = event.getMessage().getContentRaw();
-        if (msg.startsWith(Main.bot.settings.getPrefix(event.getGuild().toString())) && msg.indexOf("sus") == Main.bot.settings.getPrefix(event.getGuild().toString()).length()) {
+        if (msg.startsWith(Main.bot.settings.getPrefix(event.getGuild().toString())) && msg.indexOf("sus") == Main.bot.settings.getPrefix(event.getGuild().toString()).length()&& msg.length() == Main.bot.settings.getPrefix(event.getGuild().toString()).length() + "sus".length()) {
 
             StringBuilder sus = new StringBuilder();
             if (msg.trim().contains(" ")) {

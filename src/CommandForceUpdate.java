@@ -57,6 +57,11 @@ public class CommandForceUpdate extends ListenerAdapter {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                try {
+                    Bot.writeFile("commandForceUpdate.log", e.getLocalizedMessage() + "\n");
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
             }
         }
     }

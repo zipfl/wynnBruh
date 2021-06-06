@@ -55,6 +55,11 @@ public class UptimeThread extends Thread {
             bf.close();
         } catch (IOException e) {
             e.printStackTrace();
+            try {
+                Bot.writeFile("uptimeThread.log", e.getLocalizedMessage() + "\n");
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
         }
     }
 

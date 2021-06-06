@@ -44,6 +44,11 @@ public class Settings {
             properties.store(os, "settings");
         } catch (IOException e) {
             e.printStackTrace();
+            try {
+                Bot.writeFile("settings.log", e.getLocalizedMessage() + "\n");
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
         }
     }
 }

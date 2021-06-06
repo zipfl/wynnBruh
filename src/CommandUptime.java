@@ -46,6 +46,11 @@ public class CommandUptime extends ListenerAdapter {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                try {
+                    Bot.writeFile("commandUptime.log", e.getLocalizedMessage() + "\n");
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
             }
 
             Bot.sendMessage(channel, message.toString());

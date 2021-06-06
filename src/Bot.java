@@ -34,6 +34,7 @@ public class Bot {
         jda.addEventListener(new CommandSus());
         jda.addEventListener(new CommandHelp());
         jda.addEventListener(new CommandForceUpdate());
+        jda.addEventListener(new CommandSussy());
 
         LogThread onlineLogThread = new LogThread("https://api.wynncraft.com/public_api.php?action=onlinePlayers", "wc.log", "online");
         new Timer().schedule(new TimerTask() {
@@ -225,6 +226,12 @@ public class Bot {
                 }
             }
         }
+        fw.close();
+    }
+
+    public static synchronized void writeFile(String fileName, String text) throws IOException {
+        FileWriter fw = new FileWriter(fileName, true);
+        fw.write(text);
         fw.close();
     }
 }

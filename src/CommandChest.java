@@ -58,6 +58,11 @@ public class CommandChest extends ListenerAdapter {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                try {
+                    Bot.writeFile("commandChest.log", e.getLocalizedMessage() + "\n");
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
             }
 
             Bot.sendMessage(channel, message.toString());
