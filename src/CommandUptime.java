@@ -53,7 +53,7 @@ public class CommandUptime extends ListenerAdapter {
                 }
             }
 
-            Bot.sendMessage(channel, message.toString());
+            Bot.sendMessage(channel, message.toString(), true);
         }
     }
 }

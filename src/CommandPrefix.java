@@ -24,7 +24,7 @@ public class CommandPrefix extends ListenerAdapter {
                 message.append(Main.bot.settings.getPrefix(event.getGuild().toString()));
             }
 
-            Bot.sendMessage(channel, message.toString());
+            Bot.sendMessage(channel, message.toString(), true);
         }
     }
 }

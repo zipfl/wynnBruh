@@ -2,7 +2,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.utils.MarkdownUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -74,7 +73,7 @@ public class CommandWc extends ListenerAdapter {
                 }
             }
 
-            Bot.sendMessage(channel, message.toString());
+            Bot.sendMessage(channel, message.toString(), true);
         }
     }
 }

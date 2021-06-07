@@ -27,7 +27,7 @@ public class CommandSus extends ListenerAdapter {
                     "⠀⠻⣷⣶⣿⣇⠀⠀⠀⢠⣼⣿⣿⣿⣿⣿⣿⣿⣛⣛⣻⠉⠁⠀⠀⠀⠀⠀⠀⠀ \n" +
                     "⠀⠀⠀⠀⢸⣿⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀ ⠀⠀ \n" +
                     "⠀⠀⠀⠀⢸⣿⣀⣀⣀⣼⡿⢿⣿⣿⣿⣿⣿⡿⣿⣿⣿";
-            Bot.sendMessage(event.getChannel(), message);
+            Bot.sendMessage(event.getChannel(), message, true);
         }
     }
 }

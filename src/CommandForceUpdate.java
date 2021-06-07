@@ -42,9 +42,9 @@ public class CommandForceUpdate extends ListenerAdapter {
 
                         Bot.sendMessage(event.getChannel(), "Prioritising " + Bot.emojiGlobe + arg + " with " +
                                 playerCount + " players, ignoring " + (onlinePlayers.size() - playerCount) + " blacklisted players\n" +
-                                "Ready in ~" + TimeUnit.MILLISECONDS.toSeconds(playerCount * 2400L) + " seconds");
+                                "Ready in ~" + TimeUnit.MILLISECONDS.toSeconds(playerCount * 2400L) + " seconds", true);
                     } else {
-                        Bot.sendMessage(event.getChannel(), arg + " is offline");
+                        Bot.sendMessage(event.getChannel(), arg + " is offline", true);
                     }
                 } else {
                     StringBuilder onlineLog = new StringBuilder(Bot.readLog("onlinePlayers.log"));
@@ -53,7 +53,7 @@ public class CommandForceUpdate extends ListenerAdapter {
                     fw.write(onlineLog.toString());
                     fw.close();
 
-                    Bot.sendMessage(event.getChannel(), "Force updating " + arg);
+                    Bot.sendMessage(event.getChannel(), "Force updating " + arg, true);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

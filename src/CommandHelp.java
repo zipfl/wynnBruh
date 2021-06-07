@@ -6,7 +6,7 @@ public class CommandHelp extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         String msg = event.getMessage().getContentRaw();
-        if (msg.startsWith(Main.bot.settings.getPrefix(event.getGuild().toString())) && msg.indexOf("help") == Main.bot.settings.getPrefix(event.getGuild().toString()).length()) {
+        if (msg.startsWith(Main.bot.settings.getPrefix(event.getGuild().toString())) && (msg.indexOf("help") == Main.bot.settings.getPrefix(event.getGuild().toString()).length() || msg.indexOf("h") == Main.bot.settings.getPrefix(event.getGuild().toString()).length())) {
             String message = "🤔\n" +
                     "c - Show chests looted in the last 2h per server\n" +
                     "c <n> - Shows loot history of server WC<n>\n" +
@@ -17,7 +17,7 @@ public class CommandHelp extends ListenerAdapter {
                     "wc - Show player count per server\n" +
                     "wc <n> - Show player list of WC<n>\n" +
                     "prefix set <prefix> - Change bot prefix\n";
-            Bot.sendMessage(event.getChannel(), message);
+            Bot.sendMessage(event.getChannel(), message, true);
         }
     }
 }

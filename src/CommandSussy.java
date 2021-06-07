@@ -25,7 +25,7 @@ public class CommandSussy extends ListenerAdapter {
             int i = rand.nextInt(quotes.size());
             String message = quotes.get(i);
 
-            Bot.sendMessage(event.getChannel(), message);
+            Bot.sendMessage(event.getChannel(), message, false);
         }
     }
 }
