@@ -185,7 +185,7 @@ public class Bot {
         return sortedHashMap;
     }
 
-    public static void sendMessage(MessageChannel channel, String message) {
+    public static void sendMessage(MessageChannel channel, String message, boolean codeblock) {
         if (message.length() > 2000) {
             ArrayList<String> messageList = new ArrayList<>();
             String[] messageArr = message.split("\n");
@@ -204,12 +204,17 @@ public class Bot {
                 }
             }
             for (String finalMessage : messageList) {
-                channel.sendMessage(MarkdownUtil.codeblock(finalMessage)).queue();
+                if(codeblock)
+                    finalMessage = MarkdownUtil.codeblock(finalMessage);
+
+                channel.sendMessage(finalMessage).queue();
             }
         } else {
-            String finalMessage = MarkdownUtil.codeblock(message);
-            if (!finalMessage.equals("``````"))
-                channel.sendMessage(finalMessage).queue();
+
+            if(codeblock)
+                message = MarkdownUtil.codeblock(message);
+            if (message.length() != 0 && !message.equals("``````"))
+                channel.sendMessage(message).queue();
             else
                 channel.sendMessage("There was an error processing your request").queue();
         }
