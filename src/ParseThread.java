@@ -84,7 +84,7 @@ public class ParseThread extends Thread {
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             try {
                 Bot.writeFile("parseThread.log", e.getLocalizedMessage() + "\n");
@@ -146,7 +146,7 @@ public class ParseThread extends Thread {
         return false;
     }
 
-    public static int getHighestCombatLevel(JSONObject playerJSON) throws IOException {
+    public static int getHighestCombatLevel(JSONObject playerJSON) {
         Iterator<String> keys = playerJSON.keys();
         while (keys.hasNext()) {
             String key = keys.next();

@@ -123,7 +123,7 @@ public class Bot {
         return patternNumber.matcher(strNum).matches();
     }
 
-    public static void removeFirstLine(String fileName) throws IOException {
+    public static synchronized void removeFirstLine(String fileName) throws IOException {
         RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
         long writePosition = raf.getFilePointer();
         raf.readLine();
@@ -143,7 +143,7 @@ public class Bot {
     }
 
     @NotNull
-    public static String readLog(String filename) throws IOException {
+    public static synchronized String readLog(String filename) throws IOException {
         File file = new File(filename);
         //noinspection ResultOfMethodCallIgnored
         file.createNewFile();
@@ -157,7 +157,7 @@ public class Bot {
         return string.toString();
     }
 
-    public static int getLogLineCount(String logFile) throws IOException {
+    public static synchronized int getLogLineCount(String logFile) throws IOException {
         File file = new File(logFile);
         //noinspection ResultOfMethodCallIgnored
         file.createNewFile();
@@ -235,8 +235,9 @@ public class Bot {
     }
 
     public static synchronized void writeFile(String fileName, String text) throws IOException {
-        FileWriter fw = new FileWriter(fileName, true);
-        fw.write(text);
-        fw.close();
+        BufferedWriter bf = new BufferedWriter(new FileWriter(fileName, true));
+        bf.write(text);
+        bf.flush();
+        bf.close();
     }
 }

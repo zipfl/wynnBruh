@@ -57,7 +57,7 @@ public class LogThread extends Thread {
                 fw.write(json.toString() + "\n");
                 fw.close();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             try {
                 ParseThread.addToBlacklist(player);

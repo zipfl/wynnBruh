@@ -55,7 +55,7 @@ public class CommandForceUpdate extends ListenerAdapter {
 
                     Bot.sendMessage(event.getChannel(), "Force updating " + arg, true);
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 try {
                     Bot.writeFile("commandForceUpdate.log", e.getLocalizedMessage() + "\n");

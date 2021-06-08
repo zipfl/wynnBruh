@@ -56,7 +56,7 @@ public class CommandChest extends ListenerAdapter {
                             message.append(String.format("%1$-10s", Bot.emojiGlobe + en.getKey())).append(" | ").append(String.format("%1$9s", en.getValue() + Bot.emojiChest)).append(" | ").append(Bot.parseTimestampToHoursMinutes(UptimeThread.getServerUptime(en.getKey()))).append("\n");
                     }
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 try {
                     Bot.writeFile("commandChest.log", e.getLocalizedMessage() + "\n");

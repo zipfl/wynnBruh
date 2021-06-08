@@ -22,7 +22,7 @@ public class CommandWc extends ListenerAdapter {
             JSONObject json = null;
             try {
                 json = Bot.readJsonFromUrl("https://api.wynncraft.com/public_api.php?action=onlinePlayers");
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 try {
                     Bot.writeFile("commandWC.log", e.getLocalizedMessage() + "\n");
