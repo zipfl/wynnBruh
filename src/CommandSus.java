@@ -6,15 +6,14 @@ public class CommandSus extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         String msg = event.getMessage().getContentRaw();
-        if (msg.startsWith(Main.bot.settings.getPrefix(event.getGuild().toString())) && msg.indexOf("sus") == Main.bot.settings.getPrefix(event.getGuild().toString()).length()&& msg.length() == Main.bot.settings.getPrefix(event.getGuild().toString()).length() + "sus".length()) {
-
-            StringBuilder sus = new StringBuilder();
-            if (msg.trim().contains(" ")) {
-                for (int i = 1; i < msg.trim().split(" ").length; i++) {
-                    sus.append(msg.trim().split(" ")[i]).append(" ");
-                }
+        StringBuilder sus = new StringBuilder();
+        if (msg.trim().contains(" ")) {
+            for (int i = 1; i < msg.trim().split(" ").length; i++) {
+                sus.append(msg.trim().split(" ")[i]).append(" ");
             }
+        }
 
+        if (msg.startsWith(Main.bot.settings.getPrefix(event.getGuild().toString())) && msg.indexOf("sus") == Main.bot.settings.getPrefix(event.getGuild().toString()).length() && !msg.contains("sussy")) {
             String message = "⠀⠀⠀⠀⠀⠀⠀⣠⣤⣤⣤⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ \n" +
                     "⠀⠀⠀⠀⠀⢰⡿⠋⠁⠀⠀⠈⠉⠙⠻⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ \n" +
                     "⠀⠀⠀⠀⢀⣿⠇⠀⢀⣴⣶⡾⠿⠿⠿⢿⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ \n" +
