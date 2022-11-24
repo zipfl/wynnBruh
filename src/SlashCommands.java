@@ -15,7 +15,13 @@ public class SlashCommands extends ListenerAdapter {
         String eventName = event.getName();
 
         if (eventName.equals("say")) {
-            event.reply("less").queue();
+            OptionMapping messageOption = event.getOption("message");
+
+            String msg = "less";
+            if (messageOption != null)
+                msg = messageOption.getAsString();
+
+            event.reply(msg).queue();
         }
 
         if (eventName.equals("ping")) {
