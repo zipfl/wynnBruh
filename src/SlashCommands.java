@@ -44,7 +44,7 @@ public class SlashCommands extends ListenerAdapter {
 
         if (eventName.equals("sussy")) {
             int i = rand.nextInt(QUOTES.size());
-            event.reply(QUOTES.get(i-1)).queue();
+            event.reply(QUOTES.get(i)).queue();
         }
     }
 
