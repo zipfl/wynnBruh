@@ -3,8 +3,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-
-import java.util.Collections;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 
 public class Main extends ListenerAdapter {
     public static void main(String[] args) {
@@ -13,14 +12,15 @@ public class Main extends ListenerAdapter {
             System.exit(1);
         }
 
-        JDA jda = JDABuilder.createLight(args[0], Collections.emptyList())
-                .addEventListeners(new SlashCommands())
+        JDA jda = JDABuilder.createDefault(args[0], GatewayIntent.GUILD_MEMBERS)
                 .setActivity(Activity.playing("ligo"))
                 .build();
 
+        jda.addEventListener(new SlashCommands());
+        jda.addEventListener(new GuildJoinListener());
         jda.upsertCommand("say", "less").addOption(OptionType.STRING, "message", "Message to say").queue();
         jda.upsertCommand("ping", "Calculate ping of the bot").queue();
-        jda.upsertCommand("sussy", "Say a sussy quote").queue();
+        jda.upsertCommand("sussy", "Say a suss y quote").queue();
         jda.upsertCommand("sus", "Amogus").addOption(OptionType.STRING, "sus", "Imposter").queue();
     }
 }

@@ -73,7 +73,7 @@ public class SlashCommands extends ListenerAdapter {
         QUOTES.add("I muted every girl on Twitter today. I simply cannot bear to see another $35 Mostima cosplay from Ebay hastily thrown together with glued on horns and wings, captured using a Nokia flip-phone + full-body mirror, and expertly posted with the caption “What if I landed S2, then what? ;)”");
     }
 
-    private static final String AMOGUS = "** **\n" +
+    protected static final String AMOGUS = "** **\n" +
             "⠀⠀⠀⠀⠀⠀⠀⣠⣤⣤⣤⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ \n" +
             "⠀⠀⠀⠀⠀⢰⡿⠋⠁⠀⠀⠈⠉⠙⠻⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ \n" +
             "⠀⠀⠀⠀⢀⣿⠇⠀⢀⣴⣶⡾⠿⠿⠿⢿⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ \n" +
