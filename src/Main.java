@@ -20,7 +20,7 @@ public class Main extends ListenerAdapter {
         jda.addEventListener(new GuildJoinListener());
         jda.upsertCommand("say", "less").addOption(OptionType.STRING, "message", "Message to say").queue();
         jda.upsertCommand("ping", "Calculate ping of the bot").queue();
-        jda.upsertCommand("sussy", "Say a suss y quote").queue();
+        jda.upsertCommand("sussy", "Say a sussy quote").queue();
         jda.upsertCommand("sus", "Amogus").addOption(OptionType.STRING, "sus", "Imposter").queue();
     }
 }
